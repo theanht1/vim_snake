@@ -1,35 +1,28 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>A productive web framework that<br/>does not compromise speed and maintainability.</p>
-</section>
+<div class="row">
+  <div class="col">
+    <h1>Snake Vim Trainer</h1>
+    <h2>Hone your vim navigation skillz</h2>
+    <div class="game">
+      <canvas id="canvas" width="500" height="500"></canvas><br>
+      <p>Score: <span id="score"></span></p>
+    </div>
+  </div>
 
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
+  <div class="col">
+    <h2>Instructions</h2>
+    <p>Make your Vim snake eat the food to increase your score.</p>
+    <p>You can only eat food while INSERT mode is on.</p>
+    <p>You cannot change direction while INSERT mode is on</p>
+    <p>Controls:</p>
     <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
+      <li>Left: h</li>
+      <li>Down: j</li>
+      <li>Up: k</li>
+      <li>Right: l</li>
+      <li>Insert mode: i</li>
+      <li>Normal mode: esc</li>
     </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-    </ul>
-  </article>
-</section>
+
+  </div>
+</div>
+
