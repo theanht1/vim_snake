@@ -12,6 +12,7 @@
     "react-dom": "^16.6.3",
     "react-redux": "^5.1.1",
     "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
