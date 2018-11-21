@@ -25,6 +25,11 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Guardian config
+config :vim_snake, VimSnake.Guardian,
+  issuer: "vim_snake",
+  secret_key: "JGYAxWaH3AS1AkKwO5N/1oZZ5dB2l4PaEOR1TZ049s78E8j4/DygDxsh9386HdiA"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

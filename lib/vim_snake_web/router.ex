@@ -17,10 +17,14 @@ defmodule VimSnakeWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", VimSnakeWeb do
-  #   pipe_through :api
-  # end
+   scope "/api/v1", VimSnakeWeb do
+     pipe_through :api
+
+     resources "/users", UserController, only: [:create, :show]
+     post "/login", UserController, :login
+   end
 end
