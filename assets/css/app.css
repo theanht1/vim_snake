@@ -1,2 +1,11 @@
 /* This file is for your main application css. */
+.login-form {
+  background-color: #fef;
+}
 
+body,
+body > div.app,
+body > div.app > div,
+div.login-form {
+  height: 100%;
+}
