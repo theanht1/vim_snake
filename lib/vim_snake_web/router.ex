@@ -13,18 +13,19 @@ defmodule VimSnakeWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Other scopes may use custom stacks.
+  scope "/api/v1", VimSnakeWeb do
+    pipe_through :api
+
+    resources "/users", UserController, only: [:create, :show]
+    post "/login", UserController, :login
+  end
+
   scope "/", VimSnakeWeb do
     pipe_through :browser
 
     get "/", PageController, :index
-
+    get "/*path", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-   scope "/api/v1", VimSnakeWeb do
-     pipe_through :api
-
-     resources "/users", UserController, only: [:create, :show]
-     post "/login", UserController, :login
-   end
 end

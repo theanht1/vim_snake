@@ -1,4 +1,9 @@
 
 export default {
-  user: {},
+  user: {
+    id: '',
+    email: '',
+    username: '',
+    loginLoading: false,
+  },
 };

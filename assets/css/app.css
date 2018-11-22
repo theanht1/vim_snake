@@ -1,11 +1,12 @@
 /* This file is for your main application css. */
-.login-form {
-  background-color: #fef;
+
+body {
+  font-family: "Helvetica Neue", Helvetica;
 }
 
-body,
-body > div.app,
-body > div.app > div,
-div.login-form {
+html, body,
+body > div#app,
+body > div#app > div,
+div.v-container {
   height: 100%;
 }

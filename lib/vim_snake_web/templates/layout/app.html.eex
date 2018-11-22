@@ -4,12 +4,15 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="google-signin-client_id" content="893076919482-ufo250rm41831ks0abc9262cm96f6rgi.apps.googleusercontent.com">
+
     <title>VimSnake</title>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css"></link>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
     <%= render @view_module, @view_template, assigns %>
 
+    <script src="https://apis.google.com/js/api.js" async defer></script>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/index.js") %>"></script>
   </body>
 </html>
