@@ -12,22 +12,19 @@ defmodule VimSnakeWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.create_user(user_params),
-         {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
-      conn
-      |> put_status(:created)
-      |> render("jwt.json", jwt: token)
-    end
-  end
-
   def login(conn, %{"user" => %{"id_token" => id_token}}) do
     with (%User{} = user) <- Accounts.google_sso!(id_token),
          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
-      IO.puts(user.id)
       conn
-      |> render("jwt.json", jwt: token)
+      |> render("jwt.json", jwt: token, user: user)
+    else
+      _ -> {:error, :unauthorized}
     end
+  end
+
+  def me(conn, _) do
+    user = Guardian.Plug.current_resource(conn)
+    conn |> render("show.json", user: user)
   end
 
   def show(conn, %{"id" => id}) do

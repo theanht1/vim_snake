@@ -13,12 +13,22 @@ defmodule VimSnakeWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug VimSnake.Guardian.AuthPipeline
+  end
+
   # Other scopes may use custom stacks.
   scope "/api/v1", VimSnakeWeb do
     pipe_through :api
 
-    resources "/users", UserController, only: [:create, :show]
     post "/login", UserController, :login
+  end
+
+  scope "/api/v1", VimSnakeWeb do
+    pipe_through :jwt_authenticated
+
+    resources "/users", UserController, only: [:show]
+    post "/me", UserController, :me
   end
 
   scope "/", VimSnakeWeb do

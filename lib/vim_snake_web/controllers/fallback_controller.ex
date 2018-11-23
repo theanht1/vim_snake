@@ -19,4 +19,10 @@ defmodule VimSnakeWeb.FallbackController do
     |> put_view(VimSnakeWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:unauthorized)
+    |> json(%{error: "Wrong or Expired token"})
+  end
 end
