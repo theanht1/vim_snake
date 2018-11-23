@@ -16,7 +16,7 @@ const removeAccessToken = () => {
   localStorage.removeItem(JWT_TOKEN_KEY);
 };
 
-export const login = () => (dispatch) => {
+export const login = () => dispatch => {
   global.gapi.load('auth2', () => {
     const GoogleAuth = global.gapi.auth2.init();
     GoogleAuth.signIn()
@@ -29,7 +29,7 @@ export const login = () => (dispatch) => {
             setAccessToken(jwt);
             dispatch({ type: SET_USER, payload: user });
             dispatch({ type: SET_LOGIN_LOADING, payload: false });
-            history.push('/');
+            history.push('/play');
           }, (err) => {
             dispatch({ type: SET_LOGIN_LOADING, payload: false });
             console.log(err);
@@ -38,7 +38,7 @@ export const login = () => (dispatch) => {
   });
 };
 
-export const getCurrentUser = (token) => (dispatch) => {
+export const getCurrentUser = token => dispatch => {
   dispatch({ type: SET_APP_LOADING, payload: true });
   setAccessToken(token);
   return axios.post('/me')
@@ -50,4 +50,10 @@ export const getCurrentUser = (token) => (dispatch) => {
       dispatch({ type: SET_APP_LOADING, payload: false });
       console.log(err);
     });
-}
+};
+
+export const logout = () => dispatch => {
+  removeAccessToken();
+  dispatch({ type: SET_USER, payload: {} });
+  history.push('/login');
+};

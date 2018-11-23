@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Game from '../../game/game';
 
-class Home extends Component {
+class Play extends Component {
   componentDidMount() {
     const game = new Game('canvas');
     game.start();
@@ -40,4 +40,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Play;

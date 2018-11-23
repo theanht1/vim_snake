@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Router, Route } from 'react-router-dom';
+import { Redirect, Router, Route } from 'react-router-dom';
 import { Loading } from 'element-react';
 
 import { history } from '../store';
-import Home from './Home';
+import Play from './Play';
 import Login from './Login';
+import Header from './Header';
 
 class App extends Component {
+
+  renderAuthorized = (tag) => {
+    const { loading, isLogin } = this.props;
+    return loading || isLogin ? tag : <Redirect to="/login" />;
+  };
 
   render() {
     return (
       <Router history={history}>
         <div>
-          <Route exact path='/' component={Home} />
+          <Header />
+          <Route exact path='/play' render={() => this.renderAuthorized(<Play />)} />
           <Route exact path='/login' component={Login} />
           {this.props.loading && <Loading fullscreen={true} />}
         </div>
@@ -22,8 +29,9 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ app: { loading } }) => ({
+const mapStateToProps = ({ app: { loading }, auth: { currentUser } }) => ({
   loading,
+  isLogin: !!currentUser.id,
 });
 
 export default connect(mapStateToProps)(App);

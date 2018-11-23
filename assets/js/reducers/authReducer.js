@@ -8,10 +8,7 @@ export default (state = defaultState.auth, { type, payload }) => {
     case SET_USER:
       return {
         ...state,
-        currentUser: {
-          ...state.currentUser,
-          ...payload,
-        },
+        currentUser: payload,
       };
     case SET_LOGIN_LOADING:
       return {
