@@ -2,7 +2,7 @@ defmodule VimSnakeWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :vim_snake
 
   socket "/socket", VimSnakeWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
