@@ -16,7 +16,7 @@ class Login extends Component {
             <Button
               type="primary"
               onClick={this.props.onLogin}
-            >Login with Facebook</Button>
+            >Login with Google</Button>
           </Card>
       </Layout.Row>
     );

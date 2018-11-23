@@ -4,8 +4,11 @@ defmodule VimSnake.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias VimSnake.Repo
+  use Tesla
 
+  plug Tesla.Middleware.JSON
+
+  alias VimSnake.Repo
   alias VimSnake.Accounts.User
 
   @doc """
@@ -36,6 +39,8 @@ defmodule VimSnake.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Creates a user.
@@ -101,4 +106,22 @@ defmodule VimSnake.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def google_sso!(token_id) do
+   case get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" <> token_id) do
+      {:ok, %{body: %{"email" => email, "picture" => picture}}} ->
+        case Repo.get_by(User, email: email) do
+          (%User{} = user) -> user
+          nil ->
+            {:ok, %User{} = user } = create_user(%{
+              email: email,
+              picture: picture,
+              username: hd(String.split(email, "@"))
+            })
+            user
+        end
+      _ -> false
+    end
+  end
+
 end

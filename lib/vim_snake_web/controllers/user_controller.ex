@@ -21,14 +21,10 @@ defmodule VimSnakeWeb.UserController do
     end
   end
 
-  def login(conn, %{"user" => id}) do
-    user = Accounts.get_user!(id)
-    {:ok, jwt, _} = Guardian.encode_and_sign(user)
-    IO.puts(jwt)
-    #IO.puts()
-    with {:ok, %User{} = user} <- Accounts.get_user!(id),
+  def login(conn, %{"user" => %{"id_token" => id_token}}) do
+    with (%User{} = user) <- Accounts.google_sso!(id_token),
          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
-      IO.puts(token)
+      IO.puts(user.id)
       conn
       |> render("jwt.json", jwt: token)
     end

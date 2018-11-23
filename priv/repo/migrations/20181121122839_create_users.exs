@@ -5,6 +5,7 @@ defmodule VimSnake.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :email, :string
       add :username, :string
+      add :picture, :string
 
       timestamps()
     end
