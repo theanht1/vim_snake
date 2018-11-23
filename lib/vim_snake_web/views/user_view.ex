@@ -7,7 +7,7 @@ defmodule VimSnakeWeb.UserView do
   end
 
   def render("show.json", %{user: user}) do
-    %{data: render_one(user, UserView, "user.json")}
+    %{user: render_one(user, UserView, "user.json")}
   end
 
   def render("user.json", %{user: user}) do

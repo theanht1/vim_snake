@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Card, Button } from 'element-react';
 
-import { login } from '../../actions/userActions.js';
+import { login } from '../../actions/authActions';
 
 
 class Login extends Component {
@@ -23,7 +23,7 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = ({ user: { loginLoading } }) => ({
+const mapStateToProps = ({ auth: { loginLoading } }) => ({
   loginLoading,
 });
 
