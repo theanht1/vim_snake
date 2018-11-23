@@ -15,6 +15,7 @@ defmodule VimSnakeWeb.UserView do
       email: user.email,
       username: user.username,
       picture: user.picture,
+      highscore: user.highscore || 0,
     }
   end
 

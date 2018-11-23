@@ -27,24 +27,31 @@ defmodule VimSnakeWeb.UserController do
     conn |> render("show.json", user: user)
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    render(conn, "show.json", user: user)
-  end
-
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user!(id)
-
-    with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      render(conn, "show.json", user: user)
+  def update_score(conn, %{"user" => %{"highscore" => highscore}}) do
+    user = Guardian.Plug.current_resource(conn)
+    with {:ok, %User{} = user} <- Accounts.update_user(user, %{highscore: highscore}) do
+      conn |> render("show.json", user: user)
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
+  # def show(conn, %{"id" => id}) do
+  #   user = Accounts.get_user!(id)
+  #   render(conn, "show.json", user: user)
+  # end
 
-    with {:ok, %User{}} <- Accounts.delete_user(user) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  # def update(conn, %{"id" => id, "user" => user_params}) do
+  #   user = Accounts.get_user!(id)
+
+  #   with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+  #     render(conn, "show.json", user: user)
+  #   end
+  # end
+
+  # def delete(conn, %{"id" => id}) do
+  #   user = Accounts.get_user!(id)
+
+  #   with {:ok, %User{}} <- Accounts.delete_user(user) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 end

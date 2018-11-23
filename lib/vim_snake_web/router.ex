@@ -27,8 +27,8 @@ defmodule VimSnakeWeb.Router do
   scope "/api/v1", VimSnakeWeb do
     pipe_through :jwt_authenticated
 
-    resources "/users", UserController, only: [:show]
     post "/me", UserController, :me
+    post "/highscore", UserController, :update_score
   end
 
   scope "/", VimSnakeWeb do

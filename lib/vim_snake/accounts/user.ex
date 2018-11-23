@@ -7,6 +7,7 @@ defmodule VimSnake.Accounts.User do
     field :email, :string
     field :username, :string
     field :picture, :string
+    field :highscore, :integer
 
     timestamps()
   end
@@ -14,7 +15,7 @@ defmodule VimSnake.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :username, :picture])
+    |> cast(attrs, [:email, :username, :picture, :highscore])
     |> validate_required([:email, :username])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:username, min: 4)

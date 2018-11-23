@@ -13,4 +13,8 @@ export default {
     },
     loginLoading: false,
   },
+
+  game: {
+    scoreSubmitting: false,
+  },
 };

@@ -5,7 +5,8 @@ import { DEFAULT_LENGTH, DIRECTION } from '../utils/constants';
 
 export default class Game {
 
-  constructor(canvasId) {
+  constructor(canvasId, fn) {
+    this.fn = fn;
     const canvas = document.getElementById(canvasId);
     this.ctx = canvas.getContext('2d');
     this.width = canvas.width;;
@@ -64,7 +65,12 @@ export default class Game {
     this.ctx.strokeRect(0, 0, this.width, this.height);
 
     if (!this.snake.render()) {
-      this.start();
+      clearInterval(this.gameLoop);
+      const { score } = this.snake;
+      this.fn.submitScore({ score })
+        .then(() => {
+          this.start();
+        });
     }
 
     paintCell(this.ctx, this.food.x, this.food.y, this.cw, '#f1c40f');
