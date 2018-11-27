@@ -1,44 +1,36 @@
-import Phaser from 'phaser';
-
-import Snake from './snake';
-import { paintCell } from '../utils/draw';
-import { DEFAULT_LENGTH, DIRECTION } from '../utils/constants';
-
-
-export const createGame = (elId, width, height) => {
-  const config = {
+var config = {
     type: Phaser.WEBGL,
     width: 640,
     height: 480,
     backgroundColor: '#bfcc00',
-    parent: elId,
+    parent: 'game',
     scene: {
         preload: preload,
         create: create,
-        update: update,
-    },
-  };
-  var snake;
-  var food;
-  var cursors;
+        update: update
+    }
+};
 
-  //  Direction consts
-  var UP = 0;
-  var DOWN = 1;
-  var LEFT = 2;
-  var RIGHT = 3;
-  //const game = new Phaser.Game(width, height, Phaser.AUTO, elId, { preload: this.preload, create: this.create, update: this.update, render: this.render });
-  //const game = new Phaser.Game(width, height, Phaser.AUTO, elId);
-  const game = new Phaser.Game(config);
+var snake;
+var food;
+var cursors;
 
-  function preload () {
-    console.log('Preload');
-    this.load.image('food', '/images/game/body.png');
-    this.load.image('body', '/images/game/body.png');
-  }
+//  Direction consts
+var UP = 0;
+var DOWN = 1;
+var LEFT = 2;
+var RIGHT = 3;
 
-  function create () {
-    console.log('Create');
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+    this.load.image('food', 'assets/games/snake/food.png');
+    this.load.image('body', 'assets/games/snake/body.png');
+}
+
+function create ()
+{
     var Food = new Phaser.Class({
 
         Extends: Phaser.GameObjects.Image,
@@ -100,7 +92,6 @@ export const createGame = (elId, width, height) => {
 
         faceLeft: function ()
         {
-          console.log('FACE LEFT');
             if (this.direction === UP || this.direction === DOWN)
             {
                 this.heading = LEFT;
@@ -109,7 +100,6 @@ export const createGame = (elId, width, height) => {
 
         faceRight: function ()
         {
-          console.log('FACE RIGHT');
             if (this.direction === UP || this.direction === DOWN)
             {
                 this.heading = RIGHT;
@@ -118,7 +108,6 @@ export const createGame = (elId, width, height) => {
 
         faceUp: function ()
         {
-          console.log('FACE UP');
             if (this.direction === LEFT || this.direction === RIGHT)
             {
                 this.heading = UP;
@@ -127,7 +116,6 @@ export const createGame = (elId, width, height) => {
 
         faceDown: function ()
         {
-          console.log('FACE DOWN');
             if (this.direction === LEFT || this.direction === RIGHT)
             {
                 this.heading = DOWN;
@@ -245,7 +233,6 @@ export const createGame = (elId, width, height) => {
 
 function update (time, delta)
 {
-    //console.log('Update');
     if (!snake.alive)
     {
         return;
@@ -284,7 +271,6 @@ function update (time, delta)
             repositionFood();
         }
     }
-    //console.log(snake.direction);
 }
 
 /**
@@ -347,96 +333,3 @@ function repositionFood ()
     }
 }
 
-};
-
-export default class Game {
-
-  constructor(engine) {
-    this.engine = engine;
-  }
-
-  preload() {
-  }
-
-  create() {
-  }
-
-  update() {
-  }
-
-  // constructor(canvasId, fn) {
-  //   this.fn = fn;
-  //   const canvas = document.getElementById(canvasId);
-  //   this.ctx = canvas.getContext('2d');
-  //   this.width = canvas.width;;
-  //   this.height = canvas.height;
-  //   this.cw = 10;  //cell width
-
-  //   this.speed = 100;
-  //   this.scoreEl = document.getElementById('score');
-  // }
-
-  // start() {
-  //   this.createSnake();
-  //   this.createFood();
-
-  //   if (typeof this.gameLoop != 'undefined') {
-  //     clearInterval(this.gameLoop);
-  //   }
-  //   // call the paint function depending on game speed
-  //   this.gameLoop = setInterval(() => this.render(), this.speed);
-  //   this.keyControlListener();
-  // }
-
-  // keyControlListener() {
-  //   // keyboard controls
-  //   document.addEventListener('keydown', (e) => {
-  //     const { key } = e;
-  //     let dir;
-  //     if (key === 'h') dir = DIRECTION.LEFT;
-  //     else if (key === 'j') dir = DIRECTION.DOWN;
-  //     else if (key === 'l') dir = DIRECTION.RIGHT;
-  //     else if (key === 'k') dir = DIRECTION.UP;
-
-  //     const directionPrevious = this.snake.direction;
-  //     this.snake.updateDirection(dir);
-
-  //     if (directionPrevious !== dir) {
-  //       this.fn.updateDirection(dir);
-  //     }
-  //   })
-  // }
-
-  // createSnake() {
-  //   this.snake = new Snake(this, 0, { x: DEFAULT_LENGTH - 1, y: 0 });
-  // }
-
-  // createFood() {
-  //   this.food = {
-  //     x: Math.round(Math.random() * (this.width - this.cw) / this.cw),
-  //     y: Math.round(Math.random() * (this.height - this.cw) / this.cw),
-  //   };
-  // }
-
-  // render() {
-  //   this.scoreEl.innerHTML = this.snake.score;
-
-  //   // paint the GB on every frame
-  //   // paint the canvas
-  //   this.ctx.fillStyle = 'black';
-  //   this.ctx.fillRect(0, 0, this.width, this.height);
-  //   this.ctx.strokeStyle = '#00CC00';
-  //   this.ctx.strokeRect(0, 0, this.width, this.height);
-
-  //   if (!this.snake.render()) {
-  //     clearInterval(this.gameLoop);
-  //     const { score } = this.snake;
-  //     this.fn.submitScore({ score })
-  //       .then(() => {
-  //         this.start();
-  //       });
-  //   }
-
-  //   paintCell(this.ctx, this.food.x, this.food.y, this.cw, '#f1c40f');
-  // }
-}

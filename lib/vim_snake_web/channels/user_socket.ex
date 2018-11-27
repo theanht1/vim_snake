@@ -2,7 +2,7 @@ defmodule VimSnakeWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", VimSnakeWeb.RoomChannel
+  channel "game:default", VimSnakeWeb.GameChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

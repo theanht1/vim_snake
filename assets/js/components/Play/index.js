@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Layout } from 'element-react';
 
+import { initSocket, joinChannel } from '../../socket';
 import { updateScore } from '../../actions/gameActions';
-import Game from '../../game/game';
+import Game, { createGame } from '../../game/game';
 import ScoreBoard from './ScoreBoard';
 
 
@@ -19,8 +20,15 @@ const styles = {
 class Play extends Component {
 
   componentDidMount() {
-    const game = new Game('canvas', { submitScore: this.onSubmitScore });
-    game.start();
+    this.socket = initSocket('Token');
+    this.channel = joinChannel(this.socket, 'game:default');
+    createGame('game', 500, 500);
+    // this.game = new Game('canvas', { submitScore: this.onSubmitScore });
+    // this.game.start();
+  }
+
+  componentWillUnmount() {
+    this.socket.disconnect();
   }
 
   onSubmitScore = ({ score }) => {
@@ -35,7 +43,7 @@ class Play extends Component {
     return (
       <Layout.Row type="flex" justify="center">
         <div style={styles.gameContainer}>
-          <canvas id="canvas" width="800" height="500"></canvas><br />
+          <div id="game"></div>
           <p>Score: <span id="score"></span></p>
         </div>
         <div style={styles.scoreBoardContaner}>

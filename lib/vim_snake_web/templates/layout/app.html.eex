@@ -13,6 +13,7 @@
     <%= render @view_module, @view_template, assigns %>
 
     <script src="https://apis.google.com/js/api.js" async defer></script>
+    <!--<script src="//cdn.jsdelivr.net/npm/phaser@3.15/dist/phaser.min.js"></script>-->
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/index.js") %>"></script>
   </body>
 </html>
