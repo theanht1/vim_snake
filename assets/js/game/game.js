@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 
-import Snake from './snake';
-import { paintCell } from '../utils/draw';
+import FoodFactory from './FoodFactory';
 import { DEFAULT_LENGTH, DIRECTION } from '../utils/constants';
 
 
@@ -27,8 +26,6 @@ export const createGame = (elId, width, height) => {
   var DOWN = 1;
   var LEFT = 2;
   var RIGHT = 3;
-  //const game = new Phaser.Game(width, height, Phaser.AUTO, elId, { preload: this.preload, create: this.create, update: this.update, render: this.render });
-  //const game = new Phaser.Game(width, height, Phaser.AUTO, elId);
   const game = new Phaser.Game(config);
 
   function preload () {
@@ -38,33 +35,6 @@ export const createGame = (elId, width, height) => {
   }
 
   function create () {
-    console.log('Create');
-    var Food = new Phaser.Class({
-
-        Extends: Phaser.GameObjects.Image,
-
-        initialize:
-
-        function Food (scene, x, y)
-        {
-            Phaser.GameObjects.Image.call(this, scene)
-
-            this.setTexture('food');
-            this.setPosition(x * 16, y * 16);
-            this.setOrigin(0);
-
-            this.total = 0;
-
-            scene.children.add(this);
-        },
-
-        eat: function ()
-        {
-            this.total++;
-        }
-
-    });
-
     var Snake = new Phaser.Class({
 
         initialize:
@@ -100,7 +70,6 @@ export const createGame = (elId, width, height) => {
 
         faceLeft: function ()
         {
-          console.log('FACE LEFT');
             if (this.direction === UP || this.direction === DOWN)
             {
                 this.heading = LEFT;
@@ -109,7 +78,6 @@ export const createGame = (elId, width, height) => {
 
         faceRight: function ()
         {
-          console.log('FACE RIGHT');
             if (this.direction === UP || this.direction === DOWN)
             {
                 this.heading = RIGHT;
@@ -118,7 +86,6 @@ export const createGame = (elId, width, height) => {
 
         faceUp: function ()
         {
-          console.log('FACE UP');
             if (this.direction === LEFT || this.direction === RIGHT)
             {
                 this.heading = UP;
@@ -127,7 +94,6 @@ export const createGame = (elId, width, height) => {
 
         faceDown: function ()
         {
-          console.log('FACE DOWN');
             if (this.direction === LEFT || this.direction === RIGHT)
             {
                 this.heading = DOWN;
@@ -235,7 +201,7 @@ export const createGame = (elId, width, height) => {
 
     });
 
-    food = new Food(this, 3, 4);
+    food = new FoodFactory(this, 3, 4);
 
     snake = new Snake(this, 8, 8);
 
@@ -258,12 +224,14 @@ function update (time, delta)
     * the LEFT cursor, it ignores it, because the only valid directions you
     * can move in at that time is up and down.
     */
+
     if (cursors.left.isDown)
     {
         snake.faceLeft();
     }
     else if (cursors.right.isDown)
     {
+
         snake.faceRight();
     }
     else if (cursors.up.isDown)
@@ -284,7 +252,6 @@ function update (time, delta)
             repositionFood();
         }
     }
-    //console.log(snake.direction);
 }
 
 /**
@@ -337,6 +304,7 @@ function repositionFood ()
         var pos = Phaser.Math.RND.pick(validLocations);
 
         //  And place it
+        console.log(pos)
         food.setPosition(pos.x * 16, pos.y * 16);
 
         return true;
