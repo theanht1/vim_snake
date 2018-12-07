@@ -22,7 +22,7 @@ class Play extends Component {
   componentDidMount() {
     this.socket = initSocket('Token');
     this.channel = joinChannel(this.socket, 'game:default');
-    createGame('game', 500, 500);
+    createGame('game', this.channel, 640, 480);
     // this.game = new Game('canvas', { submitScore: this.onSubmitScore });
     // this.game.start();
   }

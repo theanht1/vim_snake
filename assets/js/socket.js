@@ -10,13 +10,13 @@ import { Socket } from "phoenix"
 
 
 export const initSocket = (token) => {
-  const socket = new Socket("/socket", {params: {token}})
-  socket.connect()
+  const socket = new Socket("/socket", { params: { token, user_id: 3 } });
+  socket.connect();
   return socket;
 };
 
 export const joinChannel = (socket, channleName) => {
-  const channel = socket.channel("game:default", {})
+  const channel = socket.channel("game:lobby", {})
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })

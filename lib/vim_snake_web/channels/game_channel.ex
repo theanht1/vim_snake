@@ -1,7 +1,10 @@
 defmodule VimSnakeWeb.GameChannel do
   use VimSnakeWeb, :channel
 
-  def join("game:default", payload, socket) do
+  alias VimSnake.Store.{Player, Snake, Ranking}
+  alias VimSnake.Constant
+
+  def join("game:lobby", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else
@@ -20,6 +23,44 @@ defmodule VimSnakeWeb.GameChannel do
   def handle_in("shout", payload, socket) do
     broadcast socket, "shout", payload
     {:noreply, socket}
+  end
+
+  def handle_in("new_player", state, socket) do
+    user = socket.assigns.user
+    state
+    |> Map.put(:user_id, user.id)
+    |> Map.put(:username, user.username)
+    |> Player.put()
+
+    Ranking.put(%{user_id: user.id, value: 0})
+    Snake.push(%{
+      user_id: user.id,
+      pos: Snake.init_positions(5, 10),
+      dir: Constant.direction.right,
+    })
+
+    broadcast(socket, "update_players", %{players: Player.all()})
+    broadcast(socket, "update_snakes", %{snakes: Snake.all()})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("change_direction", state, socket) do
+    user = socket.assigns.user
+    Snake.change_direction(user.id, state["direction"]);
+
+    {:noreply, socket}
+  end
+
+  def terminate(_msg, socket) do
+    user = socket.assigns.user
+    Player.delete(user.id)
+    Snake.delete(user.id)
+    Ranking.delete(user.id)
+    broadcast(socket, "update_players", %{players: Player.all()})
+    broadcast(socket, "update_snakes", %{snakes: Snake.all()})
+    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
   end
 
   # Add authorization logic here as required.
