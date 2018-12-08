@@ -30,7 +30,7 @@ defmodule VimSnake.Engine.Game do
 
     if n_food < @min_food do
       1..(@min_food - n_food)
-      |> Enum.each(fn _ -> get_random_food() |> Food.push() end)
+      |> Enum.each(fn _ -> new_food() |> Food.push() end)
     end
 
     Snake.reset(alive_snakes)
@@ -80,8 +80,29 @@ defmodule VimSnake.Engine.Game do
     |> length) > 1
   end
 
-  defp get_random_food do
-    [Enum.random(0..(@game_width - 1)), Enum.random(0..(@game_height - 1))]
+  defp new_food do
+    snakes = Snake.all()
+    foods = Food.all()
+
+    not_available_pos = Enum.reduce(snakes, MapSet.new, fn snake, snake_acc ->
+      Enum.reduce(snake.pos, MapSet.new, fn pos, pos_acc ->
+        MapSet.put(pos_acc, pos)
+      end)
+      |> MapSet.union(snake_acc)
+    end)
+    |> MapSet.union(MapSet.new(foods))
+
+    available_pos = Enum.reduce(0..(@game_width - 1), [], fn x, x_acc ->
+      x_acc ++ Enum.reduce(0..(@game_height - 1), [], fn y, y_acc ->
+        if !MapSet.member?(not_available_pos, [x, y]) do
+          [[x, y] | y_acc]
+        else
+          y_acc
+        end
+      end)
+    end)
+
+    Enum.random(available_pos)
   end
 end
 
