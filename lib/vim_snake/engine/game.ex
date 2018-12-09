@@ -10,10 +10,13 @@ defmodule VimSnake.Engine.Game do
     |> Enum.map(&update_protected(&1))
     |> Enum.map(&update_position(&1))
 
+    foods = Food.all()
+    snake_tiles = all_snake_tiles(snakes)
+
     died_snakes = snakes
-                  |> Enum.filter(fn snake -> wall_collision?(snake) || self_collision?(snake) end)
+                  |> Enum.filter(&(wall_collision?(&1) || snakes_collision?(snake_tiles, &1)))
     alive_snakes = snakes
-                   |> Enum.filter(fn snake -> !wall_collision?(snake) && !self_collision?(snake) end)
+                  |> Enum.filter(&(!wall_collision?(&1) && !snakes_collision?(snake_tiles, &1)))
 
     if length(died_snakes) > 0 do
       Enum.each(died_snakes, fn snake ->
@@ -23,12 +26,10 @@ defmodule VimSnake.Engine.Game do
       Endpoint.broadcast("game:lobby", "update_players", %{players: Player.all()})
     end
 
-    foods = Food.all()
     n_food = length(foods)
-
     if n_food < Constant.game.min_food do
       1..(Constant.game.min_food - n_food)
-      |> Enum.each(fn _ -> get_available_position() |> Food.push() end)
+      |> Enum.each(fn _ -> get_available_position(snake_tiles, Food.all) |> Food.push() end)
     end
 
     Snake.reset(alive_snakes)
@@ -38,7 +39,7 @@ defmodule VimSnake.Engine.Game do
   end
 
   def new_snake_position do
-    [x, y] = get_available_position()
+    [x, y] = all_snake_tiles(Snake.all) |> get_available_position(Food.all)
 
     %{
       pos: Enum.map(1..Constant.snake.init_length, fn _ -> [x, y] end),
@@ -88,39 +89,36 @@ defmodule VimSnake.Engine.Game do
     head_x < 0 || head_x >= Constant.game.width || head_y < 0 || head_y >= Constant.game.height
   end
 
-  defp self_collision?(snake) do
+  defp snakes_collision?(snake_tiles, snake) do
     head = List.first(snake.pos)
     if snake.protected do
       false
     else
-      (snake.pos
-      |> Enum.filter(fn p -> p === head end)
-      |> length) > 1
+      Map.get(snake_tiles, head, 0) > 1
     end
   end
 
-  defp snake_tiles do
-    snakes = Snake.all()
-    Enum.reduce(snakes, MapSet.new, fn snake, snake_acc ->
+  defp all_snake_tiles(snakes) do
+    Enum.reduce(snakes, %{}, fn snake, snake_acc ->
       if snake.protected do
         snake_acc
       else
-        Enum.reduce(snake.pos, MapSet.new, fn pos, pos_acc ->
-          MapSet.put(pos_acc, pos)
-        end)
-        |> MapSet.union(snake_acc)
+        snake_acc
+        |> Map.merge(
+          Enum.reduce(snake.pos, snake_acc, fn pos, pos_acc ->
+            Map.put(pos_acc, pos, Map.get(pos_acc, pos, 0) + 1)
+          end))
       end
     end)
   end
 
-  defp get_available_position do
-    foods = Food.all()
-
-    not_available_pos = snake_tiles |> MapSet.union(MapSet.new(foods))
+  defp get_available_position(snake_tiles, foods) do
+    not_available_pos = snake_tiles
+                        |> Map.merge(Map.new(foods, fn pos -> {pos, 0} end))
 
     available_pos = Enum.reduce(0..(Constant.game.width - 1), [], fn x, x_acc ->
       x_acc ++ Enum.reduce(0..(Constant.game.height - 1), [], fn y, y_acc ->
-        if !MapSet.member?(not_available_pos, [x, y]) do
+        if Map.get(not_available_pos, [x, y], 0) === 0 do
           [[x, y] | y_acc]
         else
           y_acc
