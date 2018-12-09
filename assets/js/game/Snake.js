@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
-import { DIRECTION } from '../utils/constants';
+import { getSnakeColor } from '../utils/gamePlay';
+import { DIRECTION, CELL_PX } from '../utils/constants';
 
 
 const Snake = new Phaser.Class({
@@ -9,18 +10,37 @@ const Snake = new Phaser.Class({
     this.alive = true;
 
     this.userId = snake.user_id;
+    this.color = getSnakeColor(this.userId);
     this.update(snake);
   },
 
-  update: function({ pos, dir }) {
+  update: function(snake) {
+    const { dir, pos } = snake;
     this.direction = dir;
+    this.protected = snake.protected;
 
     this.body.clear(true);
 
     pos.forEach(cell => {
-      const tail = this.body.create(cell[0] * 16, cell[1] * 16, 'body');
+      const tail = new Phaser.GameObjects.Rectangle(
+        this.body.scene,
+        cell[0] * CELL_PX,
+        cell[1] * CELL_PX,
+        CELL_PX - 1,
+        CELL_PX - 1,
+        this.color,
+      );
       tail.setOrigin(0);
+      this.body.add(tail, true);
     });
+  },
+
+  toggleVisible: function(time) {
+    if (!this.time) this.time = time;
+    if (time - this.time > 400) {
+      this.body.toggleVisible();
+      this.time = time;
+    }
   },
 
   destroy: function() {

@@ -48,7 +48,7 @@ defmodule VimSnake.Engine.Game do
   end
 
   defp update_protected(snake) do
-    if snake.protected && DateTime.diff(DateTime.utc_now, snake.created_at) > 5 do
+    if snake.protected && DateTime.diff(DateTime.utc_now, snake.created_at) > 3 do
       Map.put(snake, :protected, false)
     else
       snake

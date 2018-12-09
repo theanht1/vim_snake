@@ -78,7 +78,6 @@ export class Game {
 
   preload(scene) {
     scene.load.image('food', '/images/game/food.png');
-    scene.load.image('body', '/images/game/body.png');
   }
 
   create(scene) {
@@ -89,7 +88,12 @@ export class Game {
     this.start();
   }
 
-  update(state) {
+  update(state, time) {
+    Object.values(this.snakes).forEach(snake => {
+      if (snake.protected) {
+        snake.toggleVisible(time);
+      }
+    })
   }
 };
 
@@ -119,7 +123,7 @@ export const createGame = ({ elId, channel, user, width, height }) => {
   }
 
   function update(time, delta) {
-    game.update(this);
+    game.update(this, time);
   }
 }
 

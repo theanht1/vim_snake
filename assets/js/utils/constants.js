@@ -14,3 +14,5 @@ export const DIRECTION_CODE = {
   40: 'DOWN',
   37: 'LEFT',
 };
+
+export const CELL_PX = 16;

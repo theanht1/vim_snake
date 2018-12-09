@@ -7,7 +7,7 @@ defmodule VimSnake.GameServer do
 
   alias VimSnake.Engine.Game
 
-  @worker_interval 2000
+  @worker_interval 1000
 
   def start_link(state \\ %{}) do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
