@@ -11,3 +11,7 @@ body > div#app > div,
 div.v-container {
   height: 100%;
 }
+
+.mgt-10 {
+  margin-top: 10px;
+}

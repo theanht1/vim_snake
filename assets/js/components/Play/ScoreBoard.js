@@ -42,11 +42,19 @@ class ScoreBoard extends Component {
   };
 
   render() {
-    const { currentUser, players, snakes } = this.props;
+    const { currentUser, players, snakes, highscore } = this.props;
     const users = this.getSortedScore(players, snakes);
 
     return (
       <div style={styles.container}>
+        {highscore.score && (
+          <div>
+            Highscore: <strong>{highscore.score}</strong> by&nbsp;
+            <strong style={{ color: `#${getSnakeColor(highscore.user.user_id)}` }}>
+              {highscore.user.username}
+            </strong>
+          </div>
+        )}
         <Table
           data={users}
           columns={columns}
@@ -54,6 +62,7 @@ class ScoreBoard extends Component {
           stripe
           fit
           emptyText="No players"
+          className="mgt-10"
         />
       </div>
     );

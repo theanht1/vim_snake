@@ -22,6 +22,7 @@ class Play extends Component {
   state = {
     players: [],
     snakes: [],
+    highscore: {},
   };
 
   componentDidUpdate(prevProps) {
@@ -54,7 +55,8 @@ class Play extends Component {
       this.setState({ snakes: snakes || [] });
     });
 
-    this.channel.on('update_ranking', data => {
+    this.channel.on('update_highscore', ({ highscore }) => {
+      this.setState({ highscore: highscore || {} });
     });
   };
 
@@ -67,7 +69,7 @@ class Play extends Component {
   };
 
   render() {
-    const { players, snakes } = this.state;
+    const { players, snakes, highscore } = this.state;
 
     return (
       <Layout.Row type="flex" justify="center">
@@ -76,7 +78,7 @@ class Play extends Component {
         </div>
         <div style={styles.scoreBoardContaner}>
           <h3>Ranking</h3>
-          <ScoreBoard players={players} snakes={snakes} />
+          <ScoreBoard players={players} snakes={snakes} highscore={highscore} />
         </div>
       </Layout.Row>
     );

@@ -15,13 +15,13 @@ defmodule VimSnake.GameServer do
 
   def init(state) do
     :timer.send_interval(@worker_interval, :work)
-    state = state |> Map.put(:time, DateTime.utc_now)
+    # state = state |> Map.put(:time, DateTime.utc_now)
     {:ok, state}
   end
 
   def handle_info(:work, state) do
     Game.run()
-    state = state |> Map.put(:time, DateTime.utc_now)
+    # state = state |> Map.put(:time, DateTime.utc_now)
     {:noreply, state}
   end
 

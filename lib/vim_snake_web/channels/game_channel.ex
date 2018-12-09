@@ -1,9 +1,8 @@
 defmodule VimSnakeWeb.GameChannel do
   use VimSnakeWeb, :channel
 
-  alias VimSnake.Store.{Player, Snake, Ranking}
+  alias VimSnake.Store.{Player, Snake, Info}
   alias VimSnake.Engine.Game
-  alias VimSnake.Constant
 
   def join("game:lobby", payload, socket) do
     if authorized?(payload) do
@@ -33,7 +32,6 @@ defmodule VimSnakeWeb.GameChannel do
     |> Map.put(:username, user.username)
     |> Player.put()
 
-    Ranking.put(%{user_id: user.id, value: 0})
     new_snake = Game.new_snake_position()
     Snake.push(%{
       user_id: user.id,
@@ -45,7 +43,7 @@ defmodule VimSnakeWeb.GameChannel do
 
     broadcast(socket, "update_players", %{players: Player.all()})
     broadcast(socket, "update_snakes", %{snakes: Snake.all()})
-    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
+    broadcast(socket, "update_highscore", %{highscore: Info.get_highscore()})
 
     {:noreply, socket}
   end
@@ -61,10 +59,8 @@ defmodule VimSnakeWeb.GameChannel do
     user = socket.assigns.user
     Player.delete(user.id)
     Snake.delete(user.id)
-    Ranking.delete(user.id)
     broadcast(socket, "update_players", %{players: Player.all()})
     broadcast(socket, "update_snakes", %{snakes: Snake.all()})
-    broadcast(socket, "update_ranking", %{ranking: Ranking.all()})
   end
 
   # Add authorization logic here as required.

@@ -1,6 +1,6 @@
 defmodule VimSnake.Engine.Game do
 
-  alias VimSnake.Store.{Player, Snake, Ranking, Food}
+  alias VimSnake.Store.{Player, Snake, Info, Food}
   alias VimSnake.Constant
   alias VimSnakeWeb.Endpoint
   alias VimSnake.Engine.Utils
@@ -21,7 +21,6 @@ defmodule VimSnake.Engine.Game do
     if length(died_snakes) > 0 do
       Enum.each(died_snakes, fn snake ->
         Player.delete(snake.user_id)
-        Ranking.delete(snake.user_id)
       end)
       Endpoint.broadcast("game:lobby", "update_players", %{players: Player.all()})
     end
@@ -29,13 +28,26 @@ defmodule VimSnake.Engine.Game do
     n_food = length(foods)
     if n_food < Constant.game.min_food do
       1..(Constant.game.min_food - n_food)
-      |> Enum.each(fn _ -> get_available_position(snake_tiles, Food.all) |> Food.push() end)
+      |> Enum.each(fn _ -> get_available_position(snake_tiles, Food.all()) |> Food.push() end)
     end
 
     Snake.reset(alive_snakes)
 
     Endpoint.broadcast("game:lobby", "update_snakes", %{snakes: Snake.all()})
     Endpoint.broadcast("game:lobby", "update_foods", %{foods: Food.all()})
+
+    if length(snakes) > 0 do
+      max_snake = snakes |> Enum.max(fn sn -> length(sn.pos) end)
+      max_length = length(max_snake.pos)
+      if max_length > Info.get_highscore().score do
+        Info.put(:highscore, %{
+          score: max_length,
+          user: Player.get(max_snake.user_id),
+        })
+
+        Endpoint.broadcast("game:lobby", "update_highscore", %{highscore: Info.get_highscore})
+      end
+    end
   end
 
   def new_snake_position do

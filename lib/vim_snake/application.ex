@@ -5,7 +5,7 @@ defmodule VimSnake.Application do
 
   use Application
 
-  alias VimSnake.Store.{Player, Ranking, Snake, Food}
+  alias VimSnake.Store.{Player, Info, Snake, Food}
   alias VimSnake.GameServer
 
   def start(_type, _args) do
@@ -20,7 +20,7 @@ defmodule VimSnake.Application do
       # Starts a worker by calling: VimSnake.Worker.start_link(arg)
       # {VimSnake.Worker, arg},
       worker(Player, []),
-      worker(Ranking, []),
+      worker(Info, []),
       worker(Snake, []),
       worker(Food, []),
       worker(GameServer, [])
