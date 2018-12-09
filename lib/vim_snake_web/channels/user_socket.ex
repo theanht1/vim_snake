@@ -3,6 +3,7 @@ defmodule VimSnakeWeb.UserSocket do
 
   alias VimSnake.Repo
   alias VimSnake.Accounts.User
+  alias VimSnake.Guardian
 
   ## Channels
   channel "game:lobby", VimSnakeWeb.GameChannel
@@ -19,9 +20,10 @@ defmodule VimSnakeWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket, _connect_info) do
-    user = Repo.get(User, params["user_id"])
-    socket = socket |> assign(:user, user)
-    {:ok, socket}
+    with {:ok, %User{} = user, _claim } <- Guardian.resource_from_token(params["token"]) do
+      socket = socket |> assign(:user, user)
+      {:ok, socket}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

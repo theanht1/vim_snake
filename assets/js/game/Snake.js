@@ -4,15 +4,15 @@ import { DIRECTION } from '../utils/constants';
 
 
 const Snake = new Phaser.Class({
-  initialize: function Snake (scene) {
+  initialize: function Snake (scene, snake) {
     this.body = scene.add.group();
     this.alive = true;
-    this.heading = DIRECTION.RIGHT;
-    this.direction = DIRECTION.RIGHT;
 
+    this.userId = snake.user_id;
+    this.update(snake);
   },
 
-  update: function({ user_id, pos, dir }) {
+  update: function({ pos, dir }) {
     this.direction = dir;
 
     this.body.clear(true);
@@ -21,6 +21,10 @@ const Snake = new Phaser.Class({
       const tail = this.body.create(cell[0] * 16, cell[1] * 16, 'body');
       tail.setOrigin(0);
     });
+  },
+
+  destroy: function() {
+    this.body.clear(true, true);
   },
 });
 

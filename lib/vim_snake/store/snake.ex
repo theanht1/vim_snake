@@ -39,9 +39,5 @@ defmodule VimSnake.Store.Snake do
     end)
   end
 
-  def init_positions(x, y) do
-    Enum.map(1..@init_length, fn i -> [x, y - i + 1] end)
-  end
-
 end
 

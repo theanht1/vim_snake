@@ -6,6 +6,7 @@ import { initSocket, joinChannel } from '../../socket';
 import { updateScore } from '../../actions/gameActions';
 import Game, { createGame } from '../../game/game';
 import ScoreBoard from './ScoreBoard';
+import { JWT_TOKEN_KEY } from '../../actions/authActions';
 
 
 const styles = {
@@ -19,17 +20,28 @@ const styles = {
 
 class Play extends Component {
 
-  componentDidMount() {
-    this.socket = initSocket('Token');
-    this.channel = joinChannel(this.socket, 'game:default');
-    createGame('game', this.channel, 640, 480);
-    // this.game = new Game('canvas', { submitScore: this.onSubmitScore });
-    // this.game.start();
+  componentDidUpdate(prevProps) {
+    if (this.props.currentUser.id && !prevProps.currentUser.id) {
+      this.initGame();
+    }
   }
 
   componentWillUnmount() {
     this.socket.disconnect();
   }
+
+  initGame = () => {
+    const token = localStorage.getItem(JWT_TOKEN_KEY);
+    this.socket = initSocket(token);
+    this.channel = joinChannel(this.socket, 'game:default');
+    createGame({
+      elId: 'game',
+      channel: this.channel,
+      user: this.props.currentUser,
+      width: 640,
+      height: 480,
+    });
+  };
 
   onSubmitScore = ({ score }) => {
     const { onUpdateScore, currentUser: { highscore } } = this.props;
@@ -37,7 +49,7 @@ class Play extends Component {
       return onUpdateScore(score);
     }
     return new Promise((resolve) => resolve());
-  }
+  };
 
   render() {
     return (

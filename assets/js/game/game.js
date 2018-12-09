@@ -6,12 +6,13 @@ import { DEFAULT_LENGTH, DIRECTION, DIRECTION_CODE } from '../utils/constants';
 
 
 export class Game {
-  constructor(engine, channel) {
+  constructor(engine, channel, user) {
     this.engine = engine;
     this.channel = channel;
+    this.user = user;
   }
 
-  start(engine) {
+  start() {
     this.channel.push('new_player', {});
 
     // Listen events
@@ -24,26 +25,47 @@ export class Game {
     this.channel.on('update_snakes', data => {
       const { snakes } = data;
       if (snakes.length > 0) {
-        this.snake.update(snakes[0]);
-        // console.log('POS', snakes[0].pos)
+        this.updateSnakes(snakes);
       }
     });
 
     this.channel.on('update_foods', data => {
       const { foods } = data;
       this.foodManager.update(foods);
-      // console.log('FOOD', foods);
     });
 
-    engine.input.keyboard.on('keydown', ({ keyCode }) => {
+    this.scene.input.keyboard.on('keydown', ({ keyCode }) => {
       if (Object.keys(DIRECTION_CODE).includes(String(keyCode))) {
         this.updateDirection(DIRECTION[DIRECTION_CODE[String(keyCode)]]);
       }
     });
   }
 
+  updateSnakes(snakes) {
+    // Remove died snakes
+    const userIds = snakes.map(({ user_id }) => String(user_id));
+    Object.keys(this.snakes).forEach(userId => {
+      if (!userIds.includes(userId)) {
+        this.snakes[userId].destroy();
+        delete this.snakes[userId];
+      }
+    });
+
+    // Update snakes
+    snakes.forEach(snake => {
+      if (!this.snakes[snake.user_id]) {
+        this.snakes[snake.user_id] = new Snake(this.scene, snake);
+      } else {
+        this.snakes[snake.user_id].update(snake);
+      }
+    });
+  }
+
   updateDirection(newDir) {
-    const { direction } = this.snake;
+    const userSnake = this.snakes[this.user.id];
+    if (!userSnake) return;
+
+    const { direction } = userSnake;
 
     if (newDir !== direction
       && ((newDir === DIRECTION.UP && direction !== DIRECTION.DOWN)
@@ -54,27 +76,24 @@ export class Game {
     }
   }
 
-  preload(engine) {
-    engine.load.image('food', '/images/game/food.png');
-    engine.load.image('body', '/images/game/body.png');
+  preload(scene) {
+    scene.load.image('food', '/images/game/food.png');
+    scene.load.image('body', '/images/game/body.png');
   }
 
-  create(engine) {
-    this.foodManager = new FoodManager(engine);
-    this.snake = new Snake(engine);
+  create(scene) {
+    this.scene = scene;
+    this.foodManager = new FoodManager(scene);
+    this.snakes = {};
 
-    this.start(engine);
+    this.start();
   }
 
   update(state) {
-    //console.log('Update');
-    if (!this.snake.alive) {
-        return;
-    }
   }
 };
 
-export const createGame = (elId, channel, width, height) => {
+export const createGame = ({ elId, channel, user, width, height }) => {
   const config = {
     type: Phaser.WEBGL,
     width,
@@ -89,7 +108,7 @@ export const createGame = (elId, channel, width, height) => {
   };
 
   const engine = new Phaser.Game(config);
-  const game = new Game(engine, channel);
+  const game = new Game(engine, channel, user);
 
   function preload() {
     game.preload(this);
@@ -102,59 +121,5 @@ export const createGame = (elId, channel, width, height) => {
   function update(time, delta) {
     game.update(this);
   }
-}
-
-
-/**
-* We can place the food anywhere in our 40x30 grid
-* *except* on-top of the snake, so we need
-* to filter those out of the possible food locations.
-* If there aren't any locations left, they've won!
-*
-* @method repositionFood
-* @return {boolean} true if the food was placed, otherwise false
-*/
-function repositionFood () {
-    //  First create an array that assumes all positions
-    //  are valid for the new piece of food
-
-    //  A Grid we'll use to reposition the food each time it's eaten
-    var testGrid = [];
-
-    for (var y = 0; y < 30; y++) {
-        testGrid[y] = [];
-
-        for (var x = 0; x < 40; x++) {
-            testGrid[y][x] = true;
-        }
-    }
-
-    snake.updateGrid(testGrid);
-
-    //  Purge out false positions
-    var validLocations = [];
-
-    for (var y = 0; y < 30; y++) {
-        for (var x = 0; x < 40; x++) {
-            if (testGrid[y][x] === true) {
-                //  Is this position valid for food? If so, add it here ...
-                validLocations.push({ x: x, y: y });
-            }
-        }
-    }
-
-    if (validLocations.length > 0) {
-        //  Use the RNG to pick a random food position
-        var pos = Phaser.Math.RND.pick(validLocations);
-
-        //  And place it
-        console.log(pos)
-        food.setPosition(pos.x * 16, pos.y * 16);
-
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 

@@ -2,6 +2,7 @@ defmodule VimSnakeWeb.GameChannel do
   use VimSnakeWeb, :channel
 
   alias VimSnake.Store.{Player, Snake, Ranking}
+  alias VimSnake.Engine.Game
   alias VimSnake.Constant
 
   def join("game:lobby", payload, socket) do
@@ -33,10 +34,13 @@ defmodule VimSnakeWeb.GameChannel do
     |> Player.put()
 
     Ranking.put(%{user_id: user.id, value: 0})
+    new_snake = Game.new_snake_position()
     Snake.push(%{
       user_id: user.id,
-      pos: Snake.init_positions(5, 10),
-      dir: Constant.direction.right,
+      pos: new_snake.pos,
+      dir: new_snake.dir,
+      protected: true,
+      created_at: DateTime.utc_now,
     })
 
     broadcast(socket, "update_players", %{players: Player.all()})

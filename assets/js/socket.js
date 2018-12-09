@@ -10,7 +10,7 @@ import { Socket } from "phoenix"
 
 
 export const initSocket = (token) => {
-  const socket = new Socket("/socket", { params: { token, user_id: 3 } });
+  const socket = new Socket("/socket", { params: { token } });
   socket.connect();
   return socket;
 };
