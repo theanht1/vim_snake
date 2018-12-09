@@ -10,7 +10,7 @@ const Snake = new Phaser.Class({
     this.alive = true;
 
     this.userId = snake.user_id;
-    this.color = getSnakeColor(this.userId);
+    this.color = `0x${getSnakeColor(this.userId)}`;
     this.update(snake);
   },
 

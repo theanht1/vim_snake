@@ -19,6 +19,10 @@ const styles = {
 };
 
 class Play extends Component {
+  state = {
+    players: [],
+    snakes: [],
+  };
 
   componentDidUpdate(prevProps) {
     if (this.props.currentUser.id && !prevProps.currentUser.id) {
@@ -41,6 +45,17 @@ class Play extends Component {
       width: 640,
       height: 480,
     });
+
+    this.channel.on('update_players', ({ players }) => {
+      this.setState({ players: players || [] });
+    });
+
+    this.channel.on('update_snakes', ({ snakes }) => {
+      this.setState({ snakes: snakes || [] });
+    });
+
+    this.channel.on('update_ranking', data => {
+    });
   };
 
   onSubmitScore = ({ score }) => {
@@ -52,15 +67,16 @@ class Play extends Component {
   };
 
   render() {
+    const { players, snakes } = this.state;
+
     return (
       <Layout.Row type="flex" justify="center">
         <div style={styles.gameContainer}>
           <div id="game"></div>
-          <p>Score: <span id="score"></span></p>
         </div>
         <div style={styles.scoreBoardContaner}>
-          <h3>Your Highscore</h3>
-          <ScoreBoard />
+          <h3>Ranking</h3>
+          <ScoreBoard players={players} snakes={snakes} />
         </div>
       </Layout.Row>
     );

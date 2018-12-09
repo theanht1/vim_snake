@@ -39,13 +39,14 @@ class Header extends Component {
   };
 
   render() {
-    const { isAuthen } = this.props;
+    const { isAuthen, currentUser } = this.props;
 
     return (
       <Layout.Row type="flex" justify="space-between" align="middle" style={styles.header}>
         <h1 style={styles.title}>Vim Snake</h1>
         <div>
           <Menu theme="dark" mode="horizontal" onSelect={this.onSelectMenu}>
+            {isAuthen && <Menu.Item index="0">Hi {currentUser.username},</Menu.Item>}
             {isAuthen && <Menu.Item index="1">Play</Menu.Item>}
             {!isAuthen && <Menu.Item index="2">Login</Menu.Item>}
             {isAuthen && <Menu.Item index="3">Logout</Menu.Item>}
@@ -57,6 +58,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = ({ auth: { currentUser } }) => ({
+  currentUser,
   isAuthen: !!currentUser.id,
 });
 

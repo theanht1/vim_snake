@@ -16,12 +16,6 @@ export class Game {
     this.channel.push('new_player', {});
 
     // Listen events
-    this.channel.on('update_players', data => {
-    });
-
-    this.channel.on('update_ranking', data => {
-    });
-
     this.channel.on('update_snakes', data => {
       const { snakes } = data;
       if (snakes.length > 0) {
