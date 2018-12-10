@@ -25,14 +25,22 @@ class Play extends Component {
     highscore: {},
   };
 
+  componentDidMount() {
+    if (this.props.currentUser.id && !this.socket) {
+      this.initGame();
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    if (this.props.currentUser.id && !prevProps.currentUser.id) {
+    if (this.props.currentUser.id && !this.socket) {
       this.initGame();
     }
   }
 
   componentWillUnmount() {
-    this.socket.disconnect();
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
 
   initGame = () => {

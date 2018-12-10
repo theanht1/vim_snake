@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Router, Route } from 'react-router-dom';
+import { Redirect, Switch, Route } from 'react-router-dom';
 import { Loading } from 'element-react';
 
-import { history } from '../store';
 import Home from './Home';
 import Play from './Play';
 import Login from './Login';
@@ -18,15 +17,15 @@ class App extends Component {
 
   render() {
     return (
-      <Router history={history}>
-        <div>
-          <Header />
+      <div>
+        <Header />
+        <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/play' render={() => this.renderAuthorized(<Play />)} />
           <Route exact path='/login' component={Login} />
           {this.props.loading && <Loading fullscreen={true} />}
-        </div>
-      </Router>
+        </Switch>
+      </div>
     );
   }
 }

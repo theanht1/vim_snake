@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { push } from 'connected-react-router';
 
 import { SET_USER, SET_LOGIN_LOADING } from '../reducers/authReducer';
 import { SET_APP_LOADING } from '../reducers/appReducer';
-import { history } from '../store';
 import defaultState from '../store/defaultState';
 
 export const JWT_TOKEN_KEY = 'JWT_TOKEN';
@@ -30,7 +30,7 @@ export const login = () => dispatch => {
             setAccessToken(jwt);
             dispatch({ type: SET_USER, payload: user });
             dispatch({ type: SET_LOGIN_LOADING, payload: false });
-            history.push('/play');
+            dispatch(push('/play'));
           }, (err) => {
             dispatch({ type: SET_LOGIN_LOADING, payload: false });
             console.log(err);
@@ -56,5 +56,5 @@ export const getCurrentUser = token => dispatch => {
 export const logout = () => dispatch => {
   removeAccessToken();
   dispatch({ type: SET_USER, payload: defaultState.auth.currentUser });
-  history.push('/login');
+  dispatch(push('/login'));
 };
