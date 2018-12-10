@@ -108,15 +108,18 @@ defmodule VimSnake.Accounts do
   end
 
   def google_sso!(token_id) do
-   case get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" <> token_id) do
-      {:ok, %{body: %{"email" => email, "picture" => picture}}} ->
+    case get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" <> token_id) do
+      {:ok, %{body: %{"email" => email, "picture" => picture, "name" => name}}} ->
         case Repo.get_by(User, email: email) do
           (%User{} = user) -> user
           nil ->
             {:ok, %User{} = user } = create_user(%{
               email: email,
               picture: picture,
-              username: hd(String.split(email, "@"))
+              username: (name
+              |> String.downcase()
+              |> String.replace(" ", "_")) #hd(String.split(email, "@"))
+              <> ("_" <> to_string(Repo.aggregate(User, :max, :id) || 0)),
             })
             user
         end
