@@ -16,3 +16,8 @@ export const DIRECTION_CODE = {
 };
 
 export const CELL_PX = 16;
+
+export const BOARD_SIZE = {
+  width: CELL_PX * 60,
+  height: CELL_PX * 35,
+};

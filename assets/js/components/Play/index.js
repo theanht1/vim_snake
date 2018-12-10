@@ -1,25 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Layout } from 'element-react';
+import { Layout, Button } from 'element-react';
 
 import { initSocket, joinChannel } from '../../socket';
 import { updateScore } from '../../actions/gameActions';
 import Game, { createGame } from '../../game/game';
 import ScoreBoard from './ScoreBoard';
 import { JWT_TOKEN_KEY } from '../../actions/authActions';
+import { BOARD_SIZE } from '../../utils/constants';
 
 
 const styles = {
+  layout: {
+    flexWrap: 'wrap',
+  },
   gameContainer: {
     marginTop: '1em',
+    minWidth: BOARD_SIZE.width,
   },
   scoreBoardContaner: {
     marginLeft: '1em',
+  },
+  mask: {
+    position: 'absolute',
+    width: BOARD_SIZE.width + 10,
+    height: BOARD_SIZE.height + 13,
+    background: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
   },
 };
 
 class Play extends Component {
   state = {
+    showPlayMask: true,
     players: [],
     snakes: [],
     highscore: {},
@@ -47,16 +59,22 @@ class Play extends Component {
     const token = localStorage.getItem(JWT_TOKEN_KEY);
     this.socket = initSocket(token);
     this.channel = joinChannel(this.socket, 'game:default');
-    createGame({
+
+    this.game = createGame({
       elId: 'game',
       channel: this.channel,
       user: this.props.currentUser,
-      width: 640,
-      height: 480,
+      width: BOARD_SIZE.width,
+      height: BOARD_SIZE.height,
     });
 
+    const { currentUser } = this.props;
     this.channel.on('update_players', ({ players }) => {
       this.setState({ players: players || [] });
+      const { showPlayMask } = this.state;
+      if (!players.find(p => p.user_id === currentUser.id) && !showPlayMask) {
+        this.setState({ showPlayMask: true });
+      }
     });
 
     this.channel.on('update_snakes', ({ snakes }) => {
@@ -68,21 +86,29 @@ class Play extends Component {
     });
   };
 
-  onSubmitScore = ({ score }) => {
-    const { onUpdateScore, currentUser: { highscore } } = this.props;
-    if (score > highscore) {
-      return onUpdateScore(score);
-    }
-    return new Promise((resolve) => resolve());
+  onStartGame = () => {
+    this.setState({ showPlayMask: false });
+    this.channel.push('new_player', {});
   };
 
   render() {
-    const { players, snakes, highscore } = this.state;
+    const { showPlayMask, players, snakes, highscore } = this.state;
 
     return (
-      <Layout.Row type="flex" justify="center">
+      <Layout.Row type="flex" justify="center" style={styles.layout}>
         <div style={styles.gameContainer}>
-          <div id="game"></div>
+          <div>
+            {showPlayMask && (
+              <div style={styles.mask}>
+                <Layout.Row className="full-h" type="flex" justify="center" align="middle">
+                  <Button onClick={this.onStartGame}>
+                    Play
+                  </Button>
+                </Layout.Row>
+              </div>
+            )}
+            <div id="game"></div>
+          </div>
         </div>
         <div style={styles.scoreBoardContaner}>
           <h3>Ranking</h3>

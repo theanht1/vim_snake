@@ -12,6 +12,16 @@ div.v-container {
   height: 100%;
 }
 
+#game canvas {
+  border: 5px solid #421111;
+  border-radius: 3px;
+}
+
+.full-h {
+  height: 100%;
+}
+
 .mgt-10 {
   margin-top: 10px;
 }
+

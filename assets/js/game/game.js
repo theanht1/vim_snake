@@ -13,14 +13,10 @@ export class Game {
   }
 
   start() {
-    this.channel.push('new_player', {});
-
     // Listen events
     this.channel.on('update_snakes', data => {
-      const { snakes } = data;
-      if (snakes.length > 0) {
-        this.updateSnakes(snakes);
-      }
+      const { snakes = [] } = data;
+      this.updateSnakes(snakes);
     });
 
     this.channel.on('update_foods', data => {
@@ -96,7 +92,7 @@ export const createGame = ({ elId, channel, user, width, height }) => {
     type: Phaser.WEBGL,
     width,
     height,
-    backgroundColor: '#bfcc00',
+    backgroundColor: '#dee4ed',
     parent: elId,
     scene: {
         preload: preload,
@@ -119,5 +115,7 @@ export const createGame = ({ elId, channel, user, width, height }) => {
   function update(time, delta) {
     game.update(this, time);
   }
+
+  return game;
 }
 

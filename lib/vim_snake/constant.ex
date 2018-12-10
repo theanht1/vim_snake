@@ -8,12 +8,12 @@ defmodule VimSnake.Constant do
   }
 
   @snake %{
-    init_length: 5,
+    init_length: 2,
   }
 
   @game %{
-    width: 40,
-    height: 30,
+    width: 60,
+    height: 35,
     min_food: 5,
   }
 
