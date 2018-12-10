@@ -27,19 +27,22 @@ defmodule VimSnakeWeb.GameChannel do
 
   def handle_in("new_player", state, socket) do
     user = socket.assigns.user
-    state
-    |> Map.put(:user_id, user.id)
-    |> Map.put(:username, user.username)
-    |> Player.put()
 
-    new_snake = Game.new_snake_position()
-    Snake.push(%{
-      user_id: user.id,
-      pos: new_snake.pos,
-      dir: new_snake.dir,
-      protected: true,
-      created_at: DateTime.utc_now,
-    })
+    unless Map.get(Player.get(user.id), :user_id) do
+      state
+      |> Map.put(:user_id, user.id)
+      |> Map.put(:username, user.username)
+      |> Player.put()
+
+      new_snake = Game.new_snake_position()
+      Snake.push(%{
+        user_id: user.id,
+        pos: new_snake.pos,
+        dir: new_snake.dir,
+        protected: true,
+        created_at: DateTime.utc_now,
+      })
+    end
 
     broadcast(socket, "update_players", %{players: Player.all()})
     broadcast(socket, "update_snakes", %{snakes: Snake.all()})
