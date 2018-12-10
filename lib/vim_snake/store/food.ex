@@ -21,6 +21,10 @@ defmodule VimSnake.Store.Food do
     Agent.update(__MODULE__, &List.insert_at(&1, -1, food))
   end
 
+  def push_many(foods) do
+    Agent.update(__MODULE__, &(&1 ++ foods))
+  end
+
   def delete(food) do
     Agent.update(__MODULE__, &Enum.filter(&1, fn f -> f !== food end))
   end

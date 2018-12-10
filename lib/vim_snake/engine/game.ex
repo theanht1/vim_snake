@@ -10,7 +10,6 @@ defmodule VimSnake.Engine.Game do
     |> Enum.map(&update_protected(&1))
     |> Enum.map(&update_position(&1))
 
-    foods = Food.all()
     snake_tiles = all_snake_tiles(snakes)
 
     died_snakes = snakes
@@ -20,11 +19,15 @@ defmodule VimSnake.Engine.Game do
 
     if length(died_snakes) > 0 do
       Enum.each(died_snakes, fn snake ->
+        snake
+        |> gen_foods_from_died_snake()
+        |> Food.push_many()
         Player.delete(snake.user_id)
       end)
       Endpoint.broadcast("game:lobby", "update_players", %{players: Player.all()})
     end
 
+    foods = Food.all()
     n_food = length(foods)
     if n_food < Constant.game.min_food do
       1..(Constant.game.min_food - n_food)
@@ -139,6 +142,13 @@ defmodule VimSnake.Engine.Game do
     end)
 
     Enum.random(available_pos)
+  end
+
+  defp gen_foods_from_died_snake(snake) do
+    snake.pos
+    |> Stream.with_index(0)
+    |> Enum.filter(fn {_x, index} -> rem(index, 3) === 2 end)
+    |> Enum.map(&(elem(&1, 0)))
   end
 end
 
