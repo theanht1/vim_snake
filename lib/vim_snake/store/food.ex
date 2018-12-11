@@ -5,7 +5,7 @@ defmodule VimSnake.Store.Food do
 
   use Agent
 
-  def start_link do
+  def start_link(_state) do
     Agent.start_link(fn -> [] end, name: __MODULE__)
   end
 

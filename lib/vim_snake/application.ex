@@ -9,8 +9,6 @@ defmodule VimSnake.Application do
   alias VimSnake.GameServer
 
   def start(_type, _args) do
-    import Supervisor.Spec
-
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
@@ -19,11 +17,11 @@ defmodule VimSnake.Application do
       VimSnakeWeb.Endpoint,
       # Starts a worker by calling: VimSnake.Worker.start_link(arg)
       # {VimSnake.Worker, arg},
-      worker(Player, []),
-      worker(Info, []),
-      worker(Snake, []),
-      worker(Food, []),
-      worker(GameServer, [])
+      Player,
+      Info,
+      Snake,
+      Food,
+      GameServer,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -5,9 +5,7 @@ defmodule VimSnake.Store.Snake do
 
   use Agent
 
-  @init_length 5
-
-  def start_link do
+  def start_link(_state) do
     Agent.start_link(fn -> [] end, name: __MODULE__)
   end
 
