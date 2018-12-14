@@ -53,6 +53,10 @@ class Play extends Component {
     if (this.socket) {
       this.socket.disconnect();
     }
+
+    if (this.game) {
+      this.game.destroy();
+    }
   }
 
   initGame = () => {

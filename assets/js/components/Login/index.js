@@ -5,14 +5,20 @@ import { Layout, Card, Button } from 'element-react';
 import { login } from '../../actions/authActions';
 
 
+const styles = {
+  card: {
+    marginTop: 100,
+    maxWidth: 450,
+    height: 80,
+  },
+};
+
 class Login extends Component {
-  componentDidMount() {
-  }
 
   render() {
     return (
-      <Layout.Row className="v-container" type="flex" justify="center" align="middle">
-          <Card style={{ maxWidth: 450 }}>
+      <Layout.Row className="v-container" type="flex" justify="center">
+          <Card style={styles.card}>
             <Button
               type="primary"
               onClick={this.props.onLogin}

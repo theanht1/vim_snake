@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Layout, Menu } from 'element-react';
+import { Link } from 'react-router-dom';
+import { Layout, Menu, MessageBox } from 'element-react';
 
 import { history } from '../store';
 import { logout } from '../actions/authActions';
@@ -13,6 +14,7 @@ const styles = {
     margin: 0,
     marginLeft: '1em',
     color: '#fff',
+    textDecoration: 'none',
   },
 };
 
@@ -35,7 +37,13 @@ class Header extends Component {
   };
 
   onClickLogout = () => {
-    this.props.onLogout();
+    MessageBox.confirm('Do you want to logout?', 'Warning', {
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      type: 'warning',
+    }).then(() => {
+      this.props.onLogout();
+    });
   };
 
   render() {
@@ -43,7 +51,9 @@ class Header extends Component {
 
     return (
       <Layout.Row type="flex" justify="space-between" align="middle" style={styles.header}>
-        <h1 style={styles.title}>Vim Snake</h1>
+        <Link to="/" style={styles.title}>
+          <h1 >Vim Snake</h1>
+        </Link>
         <div>
           <Menu theme="dark" mode="horizontal" onSelect={this.onSelectMenu}>
             {isAuthen && <Menu.Item index="0">Hi {currentUser.username},</Menu.Item>}

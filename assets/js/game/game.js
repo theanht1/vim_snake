@@ -24,11 +24,19 @@ export class Game {
       this.foodManager.update(foods);
     });
 
-    this.scene.input.keyboard.on('keydown', ({ keyCode }) => {
-      if (Object.keys(DIRECTION_CODE).includes(String(keyCode))) {
-        this.updateDirection(DIRECTION[DIRECTION_CODE[String(keyCode)]]);
-      }
-    });
+    window.addEventListener('keydown', this.handleInput);
+  }
+
+  destroy() {
+    window.removeEventListener('keydown', this.handleInput);
+  }
+
+  handleInput = (e) => {
+    const { keyCode } = e;
+    if (Object.keys(DIRECTION_CODE).includes(String(keyCode))) {
+      e.preventDefault();
+      this.updateDirection(DIRECTION[DIRECTION_CODE[String(keyCode)]]);
+    }
   }
 
   updateSnakes(snakes) {
