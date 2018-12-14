@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="google-signin-client_id" content="893076919482-ufo250rm41831ks0abc9262cm96f6rgi.apps.googleusercontent.com">
 
-    <title>VimSnake</title>
+    <title>Snake Game</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>

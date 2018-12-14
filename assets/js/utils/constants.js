@@ -9,10 +9,10 @@ export const DIRECTION = {
 };
 
 export const DIRECTION_CODE = {
-  75: 'UP',
-  76: 'RIGHT',
-  74: 'DOWN',
-  72: 'LEFT',
+  38: 'UP',
+  39: 'RIGHT',
+  40: 'DOWN',
+  37: 'LEFT',
 };
 
 export const CELL_PX = 16;

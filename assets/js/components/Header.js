@@ -52,7 +52,7 @@ class Header extends Component {
     return (
       <Layout.Row type="flex" justify="space-between" align="middle" style={styles.header}>
         <Link to="/" style={styles.title}>
-          <h1 >Vim Snake</h1>
+          <h1>Snake</h1>
         </Link>
         <div>
           <Menu theme="dark" mode="horizontal" onSelect={this.onSelectMenu}>
