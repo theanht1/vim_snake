@@ -12,8 +12,8 @@ defmodule VimSnakeWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def login(conn, %{"user" => %{"id_token" => id_token}}) do
-    with (%User{} = user) <- Accounts.google_sso!(id_token),
+  def login(conn, %{"user" => %{"token" => fb_token}}) do
+    with (%User{} = user) <- Accounts.fb_sso!(fb_token),
          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
       conn
       |> render("jwt.json", jwt: token, user: user)

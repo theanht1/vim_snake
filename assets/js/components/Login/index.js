@@ -22,7 +22,7 @@ class Login extends Component {
             <Button
               type="primary"
               onClick={this.props.onLogin}
-            >Login with Google</Button>
+            >Login with Facebook</Button>
           </Card>
       </Layout.Row>
     );

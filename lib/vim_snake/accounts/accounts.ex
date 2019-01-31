@@ -107,15 +107,14 @@ defmodule VimSnake.Accounts do
     User.changeset(user, %{})
   end
 
-  def google_sso!(token_id) do
-    case get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" <> token_id) do
-      {:ok, %{body: %{"email" => email, "picture" => picture, "name" => name}}} ->
+  def fb_sso!(token) do
+    case get("https://graph.facebook.com/v3.2/me?fields=name,email&access_token=" <> token) do
+      {:ok, %{body: %{"email" => email, "name" => name}}} ->
         case Repo.get_by(User, email: email) do
           (%User{} = user) -> user
           nil ->
             {:ok, %User{} = user } = create_user(%{
               email: email,
-              picture: picture,
               username: (name
               |> String.downcase()
               |> String.replace(" ", "_")) #hd(String.split(email, "@"))

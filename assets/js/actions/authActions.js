@@ -18,23 +18,23 @@ const removeAccessToken = () => {
 };
 
 export const login = () => dispatch => {
-  global.gapi.load('auth2', () => {
-    const GoogleAuth = global.gapi.auth2.init();
-    GoogleAuth.signIn()
-      .then((res) => {
-        const id_token = res.getAuthResponse().id_token;
+  global.FB.getLoginStatus(res => {
+    if (res.status !== 'connected') {
+      console.log('User not connect to app');
+      return;
+    }
 
-        dispatch({ type: SET_LOGIN_LOADING, payload: true });
-        return axios.post('/login', { user: { id_token } })
-          .then(({ data: { jwt, user } }) => {
-            setAccessToken(jwt);
-            dispatch({ type: SET_USER, payload: user });
-            dispatch({ type: SET_LOGIN_LOADING, payload: false });
-            dispatch(push('/play'));
-          }, (err) => {
-            dispatch({ type: SET_LOGIN_LOADING, payload: false });
-            console.log(err);
-          });
+    const { authResponse: { accessToken } } = res;
+    dispatch({ type: SET_LOGIN_LOADING, payload: true });
+    return axios.post('/login', { user: { token: accessToken } })
+      .then(({ data: { jwt, user } }) => {
+        setAccessToken(jwt);
+        dispatch({ type: SET_USER, payload: user });
+        dispatch({ type: SET_LOGIN_LOADING, payload: false });
+        dispatch(push('/play'));
+      }, (err) => {
+        dispatch({ type: SET_LOGIN_LOADING, payload: false });
+        console.log(err);
       });
   });
 };
