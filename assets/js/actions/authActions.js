@@ -18,7 +18,7 @@ const removeAccessToken = () => {
 };
 
 export const login = () => dispatch => {
-  global.FB.getLoginStatus(res => {
+  global.FB.login(res => {
     if (res.status !== 'connected') {
       console.log('User not connect to app');
       return;
@@ -36,7 +36,7 @@ export const login = () => dispatch => {
         dispatch({ type: SET_LOGIN_LOADING, payload: false });
         console.log(err);
       });
-  });
+  }, { scope: 'public_profile, email' });
 };
 
 export const getCurrentUser = token => dispatch => {
