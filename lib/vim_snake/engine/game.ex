@@ -40,7 +40,7 @@ defmodule VimSnake.Engine.Game do
     Endpoint.broadcast("game:lobby", "update_foods", %{foods: Food.all()})
 
     if length(snakes) > 0 do
-      max_snake = snakes |> Enum.max(fn sn -> length(sn.pos) end)
+      max_snake = snakes |> Enum.max_by(fn sn -> length(sn.pos) end)
       max_length = length(max_snake.pos)
       if max_length > Info.get_highscore().score do
         Info.put(:highscore, %{
