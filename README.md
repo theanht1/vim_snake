@@ -1,7 +1,7 @@
 # Classical multiplayer snake game with Vim-style keybinding
 This is a project using Phoenix framework and Phaser to make a multiplayer snake game.
 
-Live demo can be found on [Heroku](https://safe-harbor-46637.herokuapp.com)
+Live demo can be found on [this](https://snake.theanht1.me/) or [Heroku](https://safe-harbor-46637.herokuapp.com)
 
 ### Requirements
 
