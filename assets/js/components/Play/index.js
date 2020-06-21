@@ -92,7 +92,7 @@ class Play extends Component {
 
   onStartGame = () => {
     this.setState({ showPlayMask: false });
-    this.channel.push('new_player', {abc: 123});
+    this.channel.push('new_player', {});
   };
 
   render() {
