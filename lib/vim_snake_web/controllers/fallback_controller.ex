@@ -25,4 +25,10 @@ defmodule VimSnakeWeb.FallbackController do
     |> put_status(:unauthorized)
     |> json(%{error: "Wrong or Expired token"})
   end
+
+  def call(conn, {:error, {:bad_request, payload}}) do
+    conn
+    |> put_status(:bad_request)
+    |> json(%{error: payload})
+  end
 end

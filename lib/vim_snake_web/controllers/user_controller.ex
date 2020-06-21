@@ -34,6 +34,17 @@ defmodule VimSnakeWeb.UserController do
     end
   end
 
+  def guest_login(conn, %{"username" => username}) do
+    with (%User{} = user) <- Accounts.get_user_by(username: username) do
+      {:error, {:bad_request, "'#{username}' is existed!"}}
+    else
+      _ ->
+        user_id = UUID.uuid4()
+        user =  %User{id: user_id, username: username}
+        conn |> render("show.json", user: user)
+    end
+  end
+
   # def show(conn, %{"id" => id}) do
   #   user = Accounts.get_user!(id)
   #   render(conn, "show.json", user: user)

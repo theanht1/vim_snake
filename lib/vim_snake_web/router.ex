@@ -22,6 +22,7 @@ defmodule VimSnakeWeb.Router do
     pipe_through :api
 
     post "/login", UserController, :login
+    post "/guest_login", UserController, :guest_login
   end
 
   scope "/api/v1", VimSnakeWeb do

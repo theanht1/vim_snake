@@ -20,9 +20,14 @@ defmodule VimSnakeWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket, _connect_info) do
-    with {:ok, %User{} = user, _claim } <- Guardian.resource_from_token(params["token"]) do
-      socket = socket |> assign(:user, user)
-      {:ok, socket}
+    case Guardian.resource_from_token(params["token"]) do
+      {:ok, %User{} = user, _claim} ->
+        socket = socket |> assign(:user, user)
+        {:ok, socket}
+      _ ->
+        user =  %User{id: params["user"]["id"], username: params["user"]["username"]}
+        socket = socket |> assign(:user, user)
+        {:ok, socket}
     end
   end
 
