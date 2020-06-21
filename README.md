@@ -4,7 +4,7 @@ This is a project using Phoenix framework and Phaser to make a multiplayer snake
 Live demo can be found on [Heroku](https://vim-snake.herokuapp.com/)
 
 ### Preview
-![Gameplay Screenshot](./priv/static/images/screen_shot.png)
+![Gameplay Screenshot](./screen_shot.png)
 
 ### Requirements
 
