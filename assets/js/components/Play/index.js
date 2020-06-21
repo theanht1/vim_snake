@@ -60,19 +60,19 @@ class Play extends Component {
   }
 
   initGame = () => {
+    const { currentUser } = this.props;
     const token = localStorage.getItem(JWT_TOKEN_KEY);
-    this.socket = initSocket(token);
+    this.socket = initSocket(token, currentUser);
     this.channel = joinChannel(this.socket, 'game:default');
 
     this.game = createGame({
       elId: 'game',
       channel: this.channel,
-      user: this.props.currentUser,
+      user: currentUser,
       width: BOARD_SIZE.width,
       height: BOARD_SIZE.height,
     });
 
-    const { currentUser } = this.props;
     this.channel.on('update_players', ({ players }) => {
       this.setState({ players: players || [] });
       const { showPlayMask } = this.state;
@@ -92,7 +92,7 @@ class Play extends Component {
 
   onStartGame = () => {
     this.setState({ showPlayMask: false });
-    this.channel.push('new_player', {});
+    this.channel.push('new_player', {abc: 123});
   };
 
   render() {

@@ -9,8 +9,8 @@
 import { Socket } from "phoenix"
 
 
-export const initSocket = (token) => {
-  const socket = new Socket("/socket", { params: { token } });
+export const initSocket = (token, user) => {
+  const socket = new Socket("/socket", { params: { token, user } });
   socket.connect();
   return socket;
 };

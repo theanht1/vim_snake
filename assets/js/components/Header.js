@@ -55,12 +55,14 @@ class Header extends Component {
           <h1 >Vim Snake</h1>
         </Link>
         <div>
+          {/*
           <Menu theme="dark" mode="horizontal" onSelect={this.onSelectMenu}>
             {isAuthen && <Menu.Item index="0">Hi {currentUser.username},</Menu.Item>}
             {isAuthen && <Menu.Item index="1">Play</Menu.Item>}
             {!isAuthen && <Menu.Item index="2">Login</Menu.Item>}
             {isAuthen && <Menu.Item index="3">Logout</Menu.Item>}
           </Menu>
+          */}
         </div>
       </Layout.Row>
     );

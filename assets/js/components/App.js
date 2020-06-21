@@ -12,7 +12,7 @@ class App extends Component {
 
   renderAuthorized = (tag) => {
     const { loading, isLogin } = this.props;
-    return loading || isLogin ? tag : <Redirect to="/login" />;
+    return loading || isLogin ? tag : <Redirect to="/" />;
   };
 
   render() {
@@ -22,7 +22,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/play' render={() => this.renderAuthorized(<Play />)} />
-          <Route exact path='/login' component={Login} />
+          {/*<Route exact path='/login' component={Login} />*/}
           {this.props.loading && <Loading fullscreen={true} />}
         </Switch>
       </div>

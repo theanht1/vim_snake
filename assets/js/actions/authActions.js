@@ -4,6 +4,7 @@ import { push } from 'connected-react-router';
 import { SET_USER, SET_LOGIN_LOADING } from '../reducers/authReducer';
 import { SET_APP_LOADING } from '../reducers/appReducer';
 import defaultState from '../store/defaultState';
+import { showNotification } from '../utils';
 
 export const JWT_TOKEN_KEY = 'JWT_TOKEN';
 
@@ -58,3 +59,23 @@ export const logout = () => dispatch => {
   dispatch({ type: SET_USER, payload: defaultState.auth.currentUser });
   dispatch(push('/login'));
 };
+
+export const createNewGuestUser = username => dispatch => {
+  dispatch({ type: SET_LOGIN_LOADING, payload: true });
+  return axios.post('/guest_login', { username })
+    .then(({ data: { user } }) => {
+      dispatch({
+        type: SET_USER,
+        payload: user,
+      });
+      dispatch({ type: SET_LOGIN_LOADING, payload: false });
+      dispatch(push('/play'));
+    }, (err) => {
+      dispatch({ type: SET_LOGIN_LOADING, payload: false });
+      showNotification('error', {
+        title: 'Error',
+        message: err.response.data.error,
+      });
+    });
+};
+
