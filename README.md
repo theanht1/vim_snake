@@ -36,3 +36,8 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ### Deployment
 You can follow [this instruction](https://hexdocs.pm/phoenix/deployment.html) to configure for production
+
+
+### TODOs
+* Re-enable login feature (with FB or Google) for reserving username and saving personal highscore
+* Add unit tests
