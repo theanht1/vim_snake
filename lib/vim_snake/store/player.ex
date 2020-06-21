@@ -15,6 +15,15 @@ defmodule VimSnake.Store.Player do
     Agent.get(__MODULE__, &Map.get(&1, player_id, %{}))
   end
 
+  def get_by_username(username) do
+    Agent.get(__MODULE__, fn players ->
+      players
+      |> Map.values
+      |> Enum.filter(fn player -> player[:username] == username end)
+      |> List.first
+    end)
+  end
+
   def put(player) do
     Agent.update(__MODULE__, &Map.put(&1, player.user_id, player))
   end

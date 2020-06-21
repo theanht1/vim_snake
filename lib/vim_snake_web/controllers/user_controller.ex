@@ -4,6 +4,7 @@ defmodule VimSnakeWeb.UserController do
   alias VimSnake.Accounts
   alias VimSnake.Accounts.User
   alias VimSnake.Guardian
+  alias VimSnake.Store.Player
 
   action_fallback VimSnakeWeb.FallbackController
 
@@ -35,13 +36,12 @@ defmodule VimSnakeWeb.UserController do
   end
 
   def guest_login(conn, %{"username" => username}) do
-    with (%User{} = user) <- Accounts.get_user_by(username: username) do
+    if Accounts.get_user_by(username: username) || Player.get_by_username(username) do
       {:error, {:bad_request, "'#{username}' is existed!"}}
     else
-      _ ->
-        user_id = UUID.uuid4()
-        user =  %User{id: user_id, username: username}
-        conn |> render("show.json", user: user)
+      user_id = UUID.uuid4()
+      user =  %User{id: user_id, username: username}
+      conn |> render("show.json", user: user)
     end
   end
 

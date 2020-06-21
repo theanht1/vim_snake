@@ -25,6 +25,7 @@ defmodule VimSnakeWeb.UserSocket do
         socket = socket |> assign(:user, user)
         {:ok, socket}
       _ ->
+        # TODO: Check duplicated username again
         user =  %User{id: params["user"]["id"], username: params["user"]["username"]}
         socket = socket |> assign(:user, user)
         {:ok, socket}
