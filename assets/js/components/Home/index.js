@@ -58,6 +58,7 @@ class Home extends Component {
         <h1>Snake Vim Trainer</h1>
         <h2>Instructions</h2>
         <p>Make your Vim snake eat the food to increase your score.</p>
+        <p>Source code available on <a href="https://github.com/theanht1/vim_snake">github</a></p>
         <p>Controls:</p>
         <ul>
           <li>Left: <strong>h</strong></li>
