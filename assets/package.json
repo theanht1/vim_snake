@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "connected-react-router": "^6.0.0",
     "element-react": "^1.4.24",
     "element-theme-default": "^1.4.13",
