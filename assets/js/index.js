@@ -1,28 +1,32 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import axios from 'axios';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import axios from "axios";
 
-import store, { history } from './store';
-import App from './components/App';
-import { getCurrentUser, JWT_TOKEN_KEY } from './actions/authActions';
+import store from "./store";
+import App from "./components/App";
+import { ToastProvider } from "./components/ui/toast";
+import { getCurrentUser, JWT_TOKEN_KEY } from "./actions/authActions";
 
-import 'element-theme-default';
-import '../css/app.css';
+import "../css/app.css";
 
-axios.defaults.baseURL = '/api/v1';
+axios.defaults.baseURL = "/api/v1";
 
 const token = localStorage.getItem(JWT_TOKEN_KEY);
 if (token) {
   store.dispatch(getCurrentUser(token));
 }
 
-ReactDOM.render(
+const container = document.getElementById("app");
+const root = createRoot(container);
+
+root.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <App />
-    </ConnectedRouter>
-  </Provider>,
-  document.getElementById('app')
+    <BrowserRouter>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </BrowserRouter>
+  </Provider>
 );

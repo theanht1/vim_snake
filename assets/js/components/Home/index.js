@@ -1,90 +1,88 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Button, Form, Input } from 'element-react';
-import { createNewGuestUser } from '../../actions/authActions';
-import { showNotification } from '../../utils';
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { createNewGuestUser } from "../../actions/authActions";
+import { showNotification } from "../../utils";
 
+const Home = ({ loginLoading, onPlay }) => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-};
-
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: {
-        username: '',
-      },
-      rules: {
-        username: [
-          { required: true, message: 'Please input username', trigger: 'blur' }
-        ],
-       },
-    };
-  }
-
-  onChange(key, value) {
-    this.setState({
-      form: Object.assign({}, this.state.form, { [key]: value })
-    });
-  }
-
-  onSubmit(e) {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    this.refs.form.validate((valid) => {
-      if (valid) {
-        this.props.onPlay(this.state.form.username);
-      } else {
-        showNotification('error', {
-          title: 'Error',
-          message: '"username" cannot be empty',
-        });
-        return false;
-      }
-    });
-  }
+    if (!username.trim()) {
+      showNotification("error", {
+        title: "Error",
+        message: '"username" cannot be empty',
+      });
+      return;
+    }
 
-  render() {
-    const { loginLoading } = this.props;
-    return (
-      <div style={styles.container}>
-        <h1>Snake Vim Trainer</h1>
-        <h2>Instructions</h2>
-        <p>Make your Vim snake eat the food to increase your score.</p>
-        <p>Source code available on <a href="https://github.com/theanht1/vim_snake">github</a></p>
-        <p>Controls:</p>
-        <ul>
-          <li>Left: <strong>h</strong></li>
-          <li>Down: <strong>j</strong></li>
-          <li>Up: <strong>k</strong></li>
-          <li>Right: <strong>l</strong></li>
-        </ul>
-        <Form ref="form" className="en-US" inline={true} model={this.state.form} rules={this.state.rules} onSubmit={this.onSubmit.bind(this)}>
-          <Form.Item label="Username" prop="username">
-            <Input value={this.state.form.username} onChange={this.onChange.bind(this, 'username')}></Input>
-          </Form.Item>
-          <Form.Item>
-            <Button loading={loginLoading} type="primary" nativeType="submit">Play</Button>
-          </Form.Item>
-        </Form>
-      </div>
-    );
-  }
-}
+    await onPlay(username);
+    navigate("/play");
+  };
+
+  return (
+    <div className="flex flex-col items-center px-4">
+      <h1 className="text-4xl font-bold mt-8 mb-4">Snake Vim Trainer</h1>
+      <h2 className="text-2xl font-semibold mb-4">Instructions</h2>
+      <p className="mb-2">
+        Make your Vim snake eat the food to increase your score.
+      </p>
+      <p className="mb-2">
+        Source code available on{" "}
+        <a
+          href="https://github.com/theanht1/vim_snake"
+          className="text-primary hover:underline"
+        >
+          github
+        </a>
+      </p>
+      <p className="mb-2">Controls:</p>
+      <ul className="mb-6 list-disc list-inside">
+        <li>
+          Left: <strong>h</strong>
+        </li>
+        <li>
+          Down: <strong>j</strong>
+        </li>
+        <li>
+          Up: <strong>k</strong>
+        </li>
+        <li>
+          Right: <strong>l</strong>
+        </li>
+      </ul>
+      <form onSubmit={onSubmit} className="flex items-end gap-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter username"
+            className="w-64"
+          />
+        </div>
+        <Button type="submit" disabled={loginLoading}>
+          {loginLoading ? "Loading..." : "Play"}
+        </Button>
+      </form>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ auth: { loginLoading } }) => ({
   loginLoading,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onPlay: username => dispatch(createNewGuestUser(username)),
+const mapDispatchToProps = (dispatch) => ({
+  onPlay: (username) => dispatch(createNewGuestUser(username)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

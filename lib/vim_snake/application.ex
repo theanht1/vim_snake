@@ -13,6 +13,8 @@ defmodule VimSnake.Application do
     children = [
       # Start the Ecto repository
       VimSnake.Repo,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: VimSnake.PubSub},
       # Start the endpoint when the application starts
       VimSnakeWeb.Endpoint,
       # Starts a worker by calling: VimSnake.Worker.start_link(arg)
@@ -21,7 +23,7 @@ defmodule VimSnake.Application do
       Info,
       Snake,
       Food,
-      GameServer,
+      GameServer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

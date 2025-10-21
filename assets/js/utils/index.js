@@ -1,7 +1,9 @@
-import { Notification } from 'element-react';
-
+import { toast } from "../components/ui/toast";
 
 export const showNotification = (type, payload) => {
-    Notification[type](payload);
+  toast({
+    type,
+    title: payload.title,
+    message: payload.message,
+  });
 };
-

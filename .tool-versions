@@ -1,4 +1,3 @@
-erlang 21.3
-elixir 1.8.1
-nodejs 10.15.3
-
+erlang 28.1
+elixir 1.19.1-otp-28
+nodejs v22.18.0

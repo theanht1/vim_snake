@@ -5,12 +5,13 @@ defmodule VimSnake.MixProject do
     [
       app: :vim_snake,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -33,19 +34,24 @@ defmodule VimSnake.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
-      {:guardian, "~> 1.0"},
-      {:tesla, "~> 1.2.1"},
-      {:elixir_uuid, "~> 1.2"}
+      {:phoenix, "~> 1.8.1"},
+      {:phoenix_pubsub, "~> 2.1"},
+      {:phoenix_ecto, "~> 4.6"},
+      {:ecto_sql, "~> 3.13.2"},
+      {:postgrex, "~> 0.21.1"},
+      {:phoenix_html, "~> 4.3"},
+      {:phoenix_live_reload, "~> 1.6", only: :dev},
+      {:phoenix_live_view, "~> 1.1.14"},
+      {:phoenix_view, "~> 2.0"},
+      {:gettext, "~> 1.0.0"},
+      {:jason, "~> 1.4"},
+      {:plug_cowboy, "~> 2.7"},
+      {:guardian, "~> 2.4"},
+      {:tesla, "~> 1.15"},
+      {:elixir_uuid, "~> 1.2"},
+      {:dns_cluster, "~> 0.2"},
+      {:bandit, "~> 1.8"},
+      {:phoenix_html_helpers, "~> 1.0"}
     ]
   end
 

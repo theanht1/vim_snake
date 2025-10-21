@@ -1,82 +1,73 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Layout, Menu, MessageBox } from 'element-react';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
 
-import { history } from '../store';
-import { logout } from '../actions/authActions';
+import { history } from "../store";
+import { logout } from "../actions/authActions";
 
-const styles = {
-  header: {
-    backgroundColor: '#324157',
-  },
-  title: {
-    margin: 0,
-    marginLeft: '1em',
-    color: '#fff',
-    textDecoration: 'none',
-  },
+const Header = ({ isAuthen, currentUser, onLogout }) => {
+  const onClickPlay = () => {
+    history.push("/play");
+  };
+
+  const onClickLogin = () => {
+    history.push("/login");
+  };
+
+  return (
+    <header className="flex justify-between items-center bg-[#324157] px-6 py-2">
+      <Link to="/" className="no-underline">
+        <h1 className="m-0 text-white text-2xl">Vim Snake</h1>
+      </Link>
+      <div>
+        {/*
+        <nav className="flex gap-4 items-center">
+          {isAuthen && <span className="text-white">Hi {currentUser.username},</span>}
+          {isAuthen && <Button variant="ghost" onClick={onClickPlay}>Play</Button>}
+          {!isAuthen && <Button variant="ghost" onClick={onClickLogin}>Login</Button>}
+          {isAuthen && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost">Logout</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Warning</DialogTitle>
+                  <DialogDescription>
+                    Do you want to logout?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button variant="outline">No</Button>
+                  <Button onClick={onLogout}>Yes</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
+        </nav>
+        */}
+      </div>
+    </header>
+  );
 };
-
-class Header extends Component {
-
-  onSelectMenu = (index, a) => {
-    switch (index) {
-      case "1": return this.onClickPlay();
-      case "2": return this.onClickLogin();
-      case "3": return this.onClickLogout();
-    }
-  };
-
-  onClickPlay = () => {
-    history.push('/play');
-  };
-
-  onClickLogin = () => {
-    history.push('/login');
-  };
-
-  onClickLogout = () => {
-    MessageBox.confirm('Do you want to logout?', 'Warning', {
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      type: 'warning',
-    }).then(() => {
-      this.props.onLogout();
-    });
-  };
-
-  render() {
-    const { isAuthen, currentUser } = this.props;
-
-    return (
-      <Layout.Row type="flex" justify="space-between" align="middle" style={styles.header}>
-        <Link to="/" style={styles.title}>
-          <h1 >Vim Snake</h1>
-        </Link>
-        <div>
-          {/*
-          <Menu theme="dark" mode="horizontal" onSelect={this.onSelectMenu}>
-            {isAuthen && <Menu.Item index="0">Hi {currentUser.username},</Menu.Item>}
-            {isAuthen && <Menu.Item index="1">Play</Menu.Item>}
-            {!isAuthen && <Menu.Item index="2">Login</Menu.Item>}
-            {isAuthen && <Menu.Item index="3">Logout</Menu.Item>}
-          </Menu>
-          */}
-        </div>
-      </Layout.Row>
-    );
-  }
-}
 
 const mapStateToProps = ({ auth: { currentUser } }) => ({
   currentUser,
   isAuthen: !!currentUser.id,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onLogout: () => dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
-

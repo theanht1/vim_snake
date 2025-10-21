@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vim_snake_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vim_snake_dev
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vim_snake_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vim_snake_web
+    environment:
+      # Database configuration
+      DATABASE_URL: "ecto://postgres:postgres@db:5432/vim_snake_dev"
+      POOL_SIZE: "10"
+
+      # Phoenix configuration
+      SECRET_KEY_BASE: "changeme_generate_with_mix_phx_gen_secret"
+      PHX_HOST: "localhost"
+      PORT: "4000"
+
+      # URL configuration
+      HOST: "localhost"
+      SCHEME: "http"
+      SCHEME_PORT: "4000"
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - vim_snake_network
+    command: >
+      sh -c "/app/bin/vim_snake eval 'VimSnake.Release.migrate' &&
+             /app/bin/vim_snake start"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  vim_snake_network:
+    driver: bridge

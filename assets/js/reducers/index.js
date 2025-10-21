@@ -1,13 +1,10 @@
-import { combineReducers } from 'redux';
-import { connectRouter } from 'connected-react-router';
+import { combineReducers } from "redux";
 
-import auth from './authReducer';
-import app from './appReducer';
-import game from './gameReducer';
+import auth from "./authReducer";
+import app from "./appReducer";
+import game from "./gameReducer";
 
-
-export default history => combineReducers({
-  router: connectRouter(history),
+export default combineReducers({
   app,
   auth,
   game,

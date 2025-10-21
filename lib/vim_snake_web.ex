@@ -19,10 +19,12 @@ defmodule VimSnakeWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: VimSnakeWeb
+      use Phoenix.Controller,
+        formats: [:html, :json],
+        layouts: [html: VimSnakeWeb.LayoutView]
 
       import Plug.Conn
-      import VimSnakeWeb.Gettext
+      use Gettext, backend: VimSnakeWeb.Gettext
       alias VimSnakeWeb.Router.Helpers, as: Routes
     end
   end
@@ -34,13 +36,29 @@ defmodule VimSnakeWeb do
         namespace: VimSnakeWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
+      import Phoenix.Controller,
+        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
+      # Include general helpers for rendering HTML
+      unquote(html_helpers())
+    end
+  end
+
+  def html_helpers do
+    quote do
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
+      import Phoenix.HTML
+      import Phoenix.HTML.Form
+      use PhoenixHTMLHelpers
+
+      # Import LiveView and .heex helpers (live_render, link, etc)
+      import Phoenix.Component
+
+      # Shortcut for generating JS commands
+      alias Phoenix.LiveView.JS
 
       import VimSnakeWeb.ErrorHelpers
-      import VimSnakeWeb.Gettext
+      use Gettext, backend: VimSnakeWeb.Gettext
       alias VimSnakeWeb.Router.Helpers, as: Routes
     end
   end
@@ -48,15 +66,17 @@ defmodule VimSnakeWeb do
   def router do
     quote do
       use Phoenix.Router
+
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
   def channel do
     quote do
       use Phoenix.Channel
-      import VimSnakeWeb.Gettext
+      use Gettext, backend: VimSnakeWeb.Gettext
     end
   end
 

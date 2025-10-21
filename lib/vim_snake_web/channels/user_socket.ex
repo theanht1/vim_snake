@@ -1,7 +1,6 @@
 defmodule VimSnakeWeb.UserSocket do
   use Phoenix.Socket
 
-  alias VimSnake.Repo
   alias VimSnake.Accounts.User
   alias VimSnake.Guardian
 
@@ -24,9 +23,10 @@ defmodule VimSnakeWeb.UserSocket do
       {:ok, %User{} = user, _claim} ->
         socket = socket |> assign(:user, user)
         {:ok, socket}
+
       _ ->
         # TODO: Check duplicated username again
-        user =  %User{id: params["user"]["id"], username: params["user"]["username"]}
+        user = %User{id: params["user"]["id"], username: params["user"]["username"]}
         socket = socket |> assign(:user, user)
         {:ok, socket}
     end

@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -16,7 +16,7 @@ config :vim_snake, VimSnakeWeb.Endpoint,
       "node_modules/webpack/bin/webpack.js",
       "--mode",
       "development",
-      "--watch-stdin",
+      "--watch",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]

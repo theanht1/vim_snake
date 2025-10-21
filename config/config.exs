@@ -1,11 +1,11 @@
 # This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
+# and its dependencies with the aid of the Config module.
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :vim_snake,
   ecto_repos: [VimSnake.Repo]
@@ -13,9 +13,14 @@ config :vim_snake,
 # Configures the endpoint
 config :vim_snake, VimSnakeWeb.Endpoint,
   url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
   secret_key_base: "7mt8ob6ETUKh+Vp9zLrEwtJjLensAaPzmYvh9PkN2vQB9A97cL7Z0jXLQDk9HLwy",
-  render_errors: [view: VimSnakeWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: VimSnake.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [
+    formats: [html: VimSnakeWeb.ErrorView, json: VimSnakeWeb.ErrorView],
+    layout: false
+  ],
+  pubsub_server: VimSnake.PubSub,
+  live_view: [signing_salt: "VimSnakeLiveView"]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -29,6 +34,9 @@ config :phoenix, :json_library, Jason
 config :vim_snake, VimSnake.Guardian,
   issuer: "vim_snake",
   secret_key: "JGYAxWaH3AS1AkKwO5N/1oZZ5dB2l4PaEOR1TZ049s78E8j4/DygDxsh9386HdiA"
+
+# Disable Tesla deprecated builder warning
+config :tesla, disable_deprecated_builder_warning: true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

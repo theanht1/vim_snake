@@ -10,13 +10,17 @@ defmodule VimSnakeWeb.UserController do
 
   def index(conn, _params) do
     users = Accounts.list_users()
-    render(conn, "index.json", users: users)
+
+    conn
+    |> put_view(VimSnakeWeb.UserView)
+    |> render("index.json", users: users)
   end
 
   def login(conn, %{"user" => %{"token" => fb_token}}) do
-    with (%User{} = user) <- Accounts.fb_sso!(fb_token),
+    with %User{} = user <- Accounts.fb_sso!(fb_token),
          {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
       conn
+      |> put_view(VimSnakeWeb.UserView)
       |> render("jwt.json", jwt: token, user: user)
     else
       _ -> {:error, :unauthorized}
@@ -25,13 +29,19 @@ defmodule VimSnakeWeb.UserController do
 
   def me(conn, _) do
     user = Guardian.Plug.current_resource(conn)
-    conn |> render("show.json", user: user)
+
+    conn
+    |> put_view(VimSnakeWeb.UserView)
+    |> render("show.json", user: user)
   end
 
   def update_score(conn, %{"user" => %{"highscore" => highscore}}) do
     user = Guardian.Plug.current_resource(conn)
+
     with {:ok, %User{} = user} <- Accounts.update_user(user, %{highscore: highscore}) do
-      conn |> render("show.json", user: user)
+      conn
+      |> put_view(VimSnakeWeb.UserView)
+      |> render("show.json", user: user)
     end
   end
 
@@ -40,8 +50,11 @@ defmodule VimSnakeWeb.UserController do
       {:error, {:bad_request, "'#{username}' is existed!"}}
     else
       user_id = UUID.uuid4()
-      user =  %User{id: user_id, username: username}
-      conn |> render("show.json", user: user)
+      user = %User{id: user_id, username: username}
+
+      conn
+      |> put_view(VimSnakeWeb.UserView)
+      |> render("show.json", user: user)
     end
   end
 
